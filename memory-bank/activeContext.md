@@ -22,8 +22,8 @@ Converting imported stitch frontend designs from `stitch_ai_interview_prep_platf
   - Fonts: Plus Jakarta Sans, Inter, JetBrains Mono, Google Material Symbols Outlined
 - **Staging Rollout Plan**:
   - Stage 1: Design tokens + Platform Hub (`ai_mentor_interview_prep_platform` -> `app/page.tsx`) [COMPLETE]
-  - Stage 2: Resume Review & ATS Diagnostic Suite (`resume_review_ats_diagnostic_suite` -> `app/resume/`) [NEXT]
-  - Stage 3: AI Adaptive Mock Interviewer (`24_7_ai_adaptive_mock_interviewer` -> `app/mock-interview/`)
+  - Stage 2: Resume Review & ATS Diagnostic Suite (`resume_review_ats_diagnostic_suite` -> `app/resume/`) [COMPLETE]
+  - Stage 3: AI Adaptive Mock Interviewer (`24_7_ai_adaptive_mock_interviewer` -> `app/mock-interview/`) [NEXT]
   - Stage 4: Mentor Marketplace (`human_mentor_marketplace_webrtc_prep` -> `app/mentors/`)
   - Stage 5: Holistic Readiness Report (`holistic_candidate_readiness_report` -> `app/report/`)
   - Stage 6: Suggested Jobs Matcher (`suggested_jobs_scraper_matcher` -> `app/jobs/`)
@@ -34,13 +34,16 @@ Converting imported stitch frontend designs from `stitch_ai_interview_prep_platf
 1. Switched to dedicated branch `frontend`.
 2. Mapped all 10 stitch directories to Next.js App Router routes.
 3. Added Obsidian Gloss Enterprise tokens in `frontend/app/globals.css` and font loaders in `frontend/app/layout.tsx`.
-4. Converted `ai_mentor_interview_prep_platform` to `frontend/app/page.tsx`:
-   - Interactive tab switcher (24/7 AI Interviewer vs Mentor Room with live simulated waveform and rubric scores).
-   - Dynamic 7-service showcase with interactive cards, radar chart SVG, before/after diff highlights, and live postings.
-   - Pricing grid, evidence loop pipeline, and verified testimonials.
-5. Verification: `npm run build` compiled cleanly with 0 errors across all routes.
-6. Committed Stage 1 changes: `feat(frontend): implement obsidian gloss theme and platform landing page (stage 1)`.
+4. Stage 1: Converted `ai_mentor_interview_prep_platform` to `frontend/app/page.tsx` with interactive tab switcher, 7 microservices cards, pricing grid, and footer.
+5. Stage 2: Converted `resume_review_ats_diagnostic_suite` to `frontend/app/resume/page.tsx` and `frontend/app/resume/report/page.tsx`:
+   - 4-card Bento Matrix: ATS Compatibility (92/100, Greenhouse/Lever/Ashby/Workday badges), Quantified Impact (91/100), Brevity & Density (84/100), Hard Skill Match (94%).
+   - Left Panel: Parsed resume stream with interactive flag highlights, before/after strikethrough previews, technical taxonomy chips.
+   - Right Panel: 4-Pillar Diagnostic Engine with interactive tabs, diff acceptance actions (live state sync with preview pane), word length histogram SVG, verb velocity bars, keyword matrix table with quick inject.
+   - Modals: "Re-scan with Target JD" drag-and-drop PDF dropzone and "Raw Semantic Differential" comparison modal.
+   - Sticky Action Deck: Download ATS-Guaranteed PDF with animated compiling state.
+6. Verification: `npm run build` compiled cleanly with 0 errors across all 9 routes.
+7. Committed Stage 2 changes: `feat(frontend): implement resume review ats diagnostic suite (stage 2)`.
 
 ## Next Steps
-1. Await user verification for Stage 1.
-2. Proceed to Stage 2: Convert `resume_review_ats_diagnostic_suite` to `frontend/app/resume/page.tsx` and `frontend/app/resume/report/page.tsx`.
+1. Await user verification for Stage 2.
+2. Proceed to Stage 3: Convert `24_7_ai_adaptive_mock_interviewer` to `frontend/app/mock-interview/page.tsx`.
