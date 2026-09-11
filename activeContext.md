@@ -4,35 +4,48 @@
 > agent session (or your own, a week later) pick up exactly where things were left off instead of re-deriving
 > context from scratch or guessing.
 
-## Current phase
-Phase 1 — Landing, Candidate Profile & Resume Intelligence
+## Current Phase & Branch
+- **Active Branch**: `dev` (integration & staging testing branch before `main`)
+- **Architecture Branch**: `microservices`
+- **Current Milestone**: Microservice Architecture Setup, Shared Core PostgreSQL Schema, and Resume Review Isolation
 
-## Current focus
-Building end-to-end resume analysis flow (landing page → auth → profile → resume upload → AI scoring → report display)
+## Current Focus
+Establishing the microservice boundaries for the 7 platform services, shared Postgres database schema (Core + Service Tables), and maintaining clean isolation in `/backend/app/services/<service_name>/`.
 
-## Recent decisions
-- Project renamed to PrepPilot. Roadmap re-sequenced to deliver end-to-end resume intelligence as Phase 1 before interview features.
-- Stack locked: Next.js + FastAPI (Python), Supabase for DB/Auth/Storage, Gemini (primary) + Groq (fallback)
-  for AI, Jitsi for video.
-- Expert model confirmed as hybrid: real experts AND an AI interviewer, not either/or.
-- Team of 5 — module ownership proposed in `ROADMAP.md`, not yet confirmed with actual names.
-- Payments explicitly out of scope for MVP — using a credits system instead of real money.
+## Recent Decisions & Architecture
+- **Git Branching Strategy**:
+  - `main`: Production release branch.
+  - `dev`: Testing & integration branch where all microservices and features are tested before merging into `main`.
+  - `microservices` / `<module>/<feature>`: Individual service and feature development branches.
+- **Microservices Model**:
+  - The platform is structured around 7 distinct microservices:
+    1. Mentor Interview Service
+    2. AI Mock Interview Service
+    3. Resume Review Service (Isolated & Functional)
+    4. Overall Report Service (Readiness Engine)
+    5. Suggested Jobs Scraper Service
+    6. JD Analyzer & Custom Interview Designer
+    7. Connected Teams Preparation Service (Universities / Bootcamps)
+- **Shared PostgreSQL Schema (Supabase)**:
+  - Core tables (`users`, `profiles`, `institutions`, `institution_members`) hold shared identity, target roles, experience tier, and skills to eliminate duplicate user state.
+  - Each microservice owns its dedicated tables (`resume_reports`, `ai_interview_*`, `mentor_*`, etc.) referencing `profile_id` / `user_id`.
+- **Modular Monorepo Layout**:
+  - Allows full domain isolation and container-readiness while enabling $0 free-tier deployment on Render/Railway behind the FastAPI API Gateway.
 
-## Recent accomplishments
-- Phase 1 End-to-End Candidate flow built and tested:
-  - High-converting Landing page (`/`)
-  - Login & Signup pages (`/login`, `/signup`)
-  - Candidate Profile page (`/profile`)
-  - Resume Upload scanner with drag & drop and animated scanner (`/resume`)
-  - Resume Diagnostic Report with radial score, 4-pillar breakdown, strengths/weaknesses, actionable suggestions, and mock interview CTA (`/resume/report`)
-  - FastAPI backend (`/backend`) with async architecture, standard `{ data, error }` response schema, PDF text extractor (`pypdf`), and Gemini/Groq/mock AI resume analyzer
-  - Verification: Frontend Next.js build passes with 0 errors across all 9 routes; Backend API endpoints (`/api/health`, `/api/resume/sample`, `/api/resume/analyze`, `/api/auth/me`, `/api/users/profile`) tested and passing with actual PDF payloads.
+## Recent Accomplishments
+1. Created git branches: `microservices` and `dev`.
+2. Created comprehensive architectural blueprints:
+   - `memory-bank/microservicesPlan.md`
+   - `memory-bank/tasks.md`
+3. Refactored and isolated Service 3 (Resume Review) into `/backend/app/services/resume_review/`:
+   - Dedicated schemas (`schemas.py`), models (`models.py`), service logic (`service.py`), and router (`api.py`).
+   - Extended shared core models in `/backend/app/models/user.py` (`User`, `Profile`, `Institution`, `InstitutionMember`).
+   - Backwards-compatible router forwarding in `app/api/resume.py` and `app/services/resume_service.py`.
+4. Verification:
+   - Isolated resume service health (`/api/resume/health`) returns healthy.
+   - Real binary PDF upload and AI analysis return 200 OK.
+   - Next.js 16 frontend build compiles cleanly with 0 errors across all 9 static routes.
 
-## Next steps
-1. User provides or connects Supabase keys (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_JWT_SECRET`) and AI keys (`GEMINI_API_KEY`, `GROQ_API_KEY`) when ready.
-2. Advance to Phase 2: AI Mock Interview module (adaptive question generation based on resume gaps, speech/text response handling, and live feedback scoring).
-
-## Open questions (resolve before Phase 1 ends)
-- Exact scoring rubric for feedback (what does a "technical_score" of 7/10 mean, concretely?) — needs a
-  written rubric so AI-generated and expert-authored feedback stay comparable.
-- Credits system mechanics: do candidates get a fixed number per week, or earn them somehow?
+## Next Steps
+1. Advance to Phase 2: Implement Service 2 (`/backend/app/services/ai_interview`) with the adaptive conversational mock interview loop and rubric scoring.
+2. Connect live Supabase project credentials (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_JWT_SECRET`) and AI keys (`GEMINI_API_KEY`, `GROQ_API_KEY`) when ready.
