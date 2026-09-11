@@ -52,3 +52,5 @@ backend/.env
 *.swo
 .DS_Store
 Thumbs.db
+
+stitch_ai_interview_prep_platform/
