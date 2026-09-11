@@ -4,15 +4,15 @@
 > just started). Add new items if scope shifts.
 
 ## What works
-- **Frontend Scaffolding**: Next.js 16 + TypeScript + Tailwind CSS + shadcn/ui + Lucide icons. Production build verified with 0 errors.
-- **Landing Page** (`/`): Modern, high-converting hero, stats, 3 core feature pillars, 4-step workflow, resume report preview, interactive FAQ, responsive navigation & footer.
+- **Frontend Scaffolding & Design System**: Next.js 16 + TypeScript + Tailwind CSS v4 + Obsidian Gloss Enterprise design tokens (`#11131b` dark surfaces, electric indigo `#c0c1ff`/`#8083ff`, violet, emerald `#4edea3`, Plus Jakarta Sans, Inter, JetBrains Mono, Google Material Symbols). Production build verified with 0 errors.
+- **Master Platform Ecosystem Landing Page** (`/`): High-converting hero with atmospheric glows, interactive split hero demo (target JD blueprint vs live session switcher between 24/7 AI Interviewer with live audio waveform & rubric scores, and Mentor Room), 7-microservice expansive showcase cards (Resume ATS, AI Mock, Mentor Marketplace, Readiness Radar, Jobs Scraper, Custom JD Designer, Institutional Teams OS), 4-step evidence loop, testimonials, transparent pricing, and enterprise footer.
 - **Auth Flow** (`/login`, `/signup`): Authentication pages with candidate/expert role selection and guest/demo flow.
 - **Candidate Profile** (`/profile`): Personal info, target role, experience level, target companies, key skill chips, recent reports sidebar, interview cards.
 - **Resume Upload & Scanner** (`/resume`): Drag-and-drop PDF upload, target role specification, 4-step animated scanning progression, connected to backend `apiUpload` with client-side fallback.
 - **Resume Diagnostic Report** (`/resume/report`): Executive summary, letter grade, radial overall score gauge (0-100), 4-pillar score breakdown (Impact, Technical Depth, ATS Compatibility, Structure & Brevity), detected skills grouped by category, strengths vs areas for improvement, actionable before/after bullet improvement cards with priority badges, and bridge CTA to start mock interview.
 - **Backend Core**: FastAPI layered architecture (`api/`, `services/`, `models/`, `schemas/`, `core/`), standard `{ data, error }` response schema, CORS middleware, health check endpoint.
 - **Resume Analysis Engine**: PDF extraction via `pypdf`, Gemini Flash integration + Groq fallback + dev mock engine for offline/free-tier resiliency, tested with real PDF payloads.
-- **Documentation & Memory Bank**: PrepPilot branding across all documentation, `/memory-bank` persistent context created, `ROADMAP.md` re-sequenced.
+- **Documentation & Memory Bank**: PrepPilot branding across all documentation, `/memory-bank` persistent context created, `ROADMAP.md` re-sequenced, `implementation_plan.md` created.
 
 ## What's left (mirrors the MVP scope in `projectbrief.md`)
 
