@@ -13,7 +13,7 @@
 - **Human Mentor Marketplace & WebRTC Prep** (`/mentors`): Complete Obsidian Gloss Enterprise conversion of `human_mentor_marketplace_webrtc_prep`. Upcoming Jitsi session banner (Marcus Vance, Google Cloud Infra L7, pre-flight hardware diagnostics, attached blueprint selector), 3 evaluation assurance pillars (60-Min SLA, Calibration Matrix, Private Replay), fast multi-tag filtering (FAANG+ companies, Distributed Systems / AI / Leadership domains), sort dropdown, 4 calibrated mentor cards with dynamic slot selection, interactive Jitsi WebRTC pre-flight connection modal, dynamic booking & schedule confirmation modal, and recent calibrated rubric showcase (#EXP-89021-CALIBRATED) with simulated PDF export.
 - **Backend Core**: FastAPI layered architecture (`api/`, `services/`, `models/`, `schemas/`, `core/`), standard `{ data, error }` response schema, CORS middleware, health check endpoint.
 - **Resume Analysis Engine**: PDF extraction via `pypdf`, Gemini Flash integration + Groq fallback + dev mock engine for offline/free-tier resiliency, tested with real PDF payloads.
-- **Documentation & Memory Bank**: PrepPilot branding across all documentation, `/memory-bank` persistent context created, `ROADMAP.md` re-sequenced, `implementation_plan.md` created.
+- **Documentation & Memory Bank**: PrepPilot branding across all documentation, `/memory-bank` persistent context created, `ROADMAP.md` re-sequenced, `implementation_plan.md` created, repository sanitized (stale duplicate context files eliminated), and master root `README.md` created with comprehensive 7-microservice architecture and quickstart instructions.
 
 ## What's left (mirrors the MVP scope in `projectbrief.md`)
 

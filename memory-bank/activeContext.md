@@ -47,7 +47,15 @@ Converting imported stitch frontend designs from `stitch_ai_interview_prep_platf
    - Recent Mock Interview Rubric Report (#EXP-89021-CALIBRATED): Architecture, Concurrency, and Executive Presence breakdown with simulated rubric PDF download.
 8. Verification: `npm run build` compiled cleanly with 0 errors across all 11 routes.
 9. Committed Stage 4: `feat(frontend): implement human mentor marketplace webrtc prep (stage 4)`.
+10. Repository Sanitization & Root README Creation:
+    - Removed 6 stale duplicate context files from root (`activeContext.md`, `productContext.md`, `progress.md`, `projectbrief.md`, `systemPatterns.md`, `techContext.md`) and redundant `memory-bank/ROADMAP.md` to establish single-source-of-truth.
+    - Updated root `.gitignore` and `frontend/.gitignore` with hardened rules to strictly protect environment variables (`.env*`) while tracking `.env.example` blueprints.
+    - Cleaned all local Python `__pycache__` directories.
+    - Tracked `frontend/.env.example` blueprint for the frontend environment.
+    - Created comprehensive, modern root [`README.md`](file:///c:/Users/vedan/Desktop/Capstone/README.md) covering PrepPilot architecture, 7 microservices, $0 free-tier stack, quickstart guide, API conventions, and engineering rules.
+    - Updated `frontend/README.md` with Next.js 16 setup, App Router structure, and Obsidian Gloss Enterprise tokens.
+    - Re-verified production build (`npm run build`) compiling cleanly with 0 errors across all 11 routes.
 
 ## Next Steps
-1. Present Stage 4 to user for review and verification.
-2. On confirmation, proceed to Stage 5: Convert `holistic_candidate_readiness_report` to `frontend/app/report/page.tsx`.
+1. Present sanitization and new README to the user for review.
+2. Proceed to Stage 5: Convert `holistic_candidate_readiness_report` to `frontend/app/report/page.tsx`.

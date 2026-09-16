@@ -1,24 +1,24 @@
-# Node & Next.js
+# Dependencies
 node_modules/
 frontend/node_modules/
+
+# Next.js build outputs
 .next/
 frontend/.next/
 out/
 frontend/out/
+build/
+dist/
 
-# Python
+# Python & caches
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
 backend/__pycache__/
-backend/app/__pycache__/
-backend/app/*/__pycache__/
-backend/app/*/*/__pycache__/
-build/
+backend/app/**/__pycache__/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -38,12 +38,30 @@ venv/
 env/
 ENV/
 
+# Testing, Coverage & Linting
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+*.tsbuildinfo
+coverage/
+frontend/coverage/
+
 # Environment variables & secrets
 .env
+.env.*
 .env.local
 .env.*.local
+frontend/.env
+frontend/.env.*
 frontend/.env.local
+frontend/.env.*.local
 backend/.env
+backend/.env.*
+!.env.example
+!backend/.env.example
+!frontend/.env.example
 
 # IDE & OS
 .vscode/
@@ -52,5 +70,3 @@ backend/.env
 *.swo
 .DS_Store
 Thumbs.db
-
-stitch_ai_interview_prep_platform/
