@@ -62,6 +62,7 @@ Converting imported stitch frontend designs from `stitch_ai_interview_prep_platf
     - Formatting & Structure Evaluator (`evaluator.py`): section completeness scoring (Contact, Experience, Education, Skills, Projects), layout word density, bullet rhythm, action verbs ratio, and quantifiable metrics ratio.
     - Multi-Pillar Score Assignment & Applicant Ranking (`service.py` & `api.py`): composite 0-100 score formula, grade assignment (A+ to F), candidate database logging (`CandidateApplicant` & `ResumeReport`), and ranking endpoint (`POST /api/resume/rank`) ordering applicants from highest to lowest score.
     - Verified with comprehensive test suites: `tests/test_ats_engine.py` (all 6/6 tests passed) and `tests/test_api_endpoints.py` (all FastAPI endpoints passed).
+12. Created [`backend/README.md`](file:///c:/Users/vedan/Desktop/Capstone/backend/README.md) with quickstart instructions, virtual environment setup, hot-reload server launch commands, API documentation links, and curl examples.
 
 ## Next Steps
 1. Complete Stage 5 frontend integration: Convert `holistic_candidate_readiness_report` to `frontend/app/report/page.tsx`.
