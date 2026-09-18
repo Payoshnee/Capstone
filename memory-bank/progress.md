@@ -12,7 +12,7 @@
 - **24/7 AI Adaptive Mock Interviewer** (`/mock-interview`): Complete Obsidian Gloss Enterprise conversion of `24_7_ai_adaptive_mock_interviewer`. Live proctor session bar with running timer, dual-core stream grid (Neural AI Proctor with animated equalizer visualizer bars + challenge injection indicator, Candidate camera/mic stream controls), live transcript stream with real-time speech telemetry (WPM, filler word count, audio input buffer indicator), System Architecture Whiteboard modal with ASCII diagram editor and broadcast action, live 3-pillar evaluation telemetry (System Depth, Structural Clarity, STAR Execution), 6-axis SVG competency radar chart, and Finish Round evaluation summary modal.
 - **Human Mentor Marketplace & WebRTC Prep** (`/mentors`): Complete Obsidian Gloss Enterprise conversion of `human_mentor_marketplace_webrtc_prep`. Upcoming Jitsi session banner (Marcus Vance, Google Cloud Infra L7, pre-flight hardware diagnostics, attached blueprint selector), 3 evaluation assurance pillars (60-Min SLA, Calibration Matrix, Private Replay), fast multi-tag filtering (FAANG+ companies, Distributed Systems / AI / Leadership domains), sort dropdown, 4 calibrated mentor cards with dynamic slot selection, interactive Jitsi WebRTC pre-flight connection modal, dynamic booking & schedule confirmation modal, and recent calibrated rubric showcase (#EXP-89021-CALIBRATED) with simulated PDF export.
 - **Backend Core**: FastAPI layered architecture (`api/`, `services/`, `models/`, `schemas/`, `core/`), standard `{ data, error }` response schema, CORS middleware, health check endpoint.
-- **Resume Analysis Engine**: PDF extraction via `pypdf`, Gemini Flash integration + Groq fallback + dev mock engine for offline/free-tier resiliency, tested with real PDF payloads.
+- **Resume Analysis & ATS Scoring Engine**: Complete deterministic and AI-enhanced ATS software. PDF text and layout extraction, structured parsing (contact details, work experience, education with GPA, categorized skills), SDE and Data role keyword pools (9 roles + 29 languages + tools/DBs/cloud), direct JD and role keyword matching, section completeness, action verb and quantifiable metric evaluation, composite ATS scoring (0-100), candidate database logging (`CandidateApplicant`), and multi-applicant ranking (`POST /api/resume/rank`). Verified with automated test suites.
 - **Documentation & Memory Bank**: PrepPilot branding across all documentation, `/memory-bank` persistent context created, `ROADMAP.md` re-sequenced, `implementation_plan.md` created, repository sanitized (stale duplicate context files eliminated), and master root `README.md` created with comprehensive 7-microservice architecture and quickstart instructions.
 
 ## What's left (mirrors the MVP scope in `projectbrief.md`)
@@ -23,9 +23,13 @@
 - [x] Candidate profile page
 - [x] Resume upload page with drag-and-drop
 - [x] Backend: Resume PDF extraction
+- [x] Backend: Complete ATS text parsing & structure evaluation
+- [x] Backend: SDE & Data roles keyword pool and matching
+- [x] Backend: Candidate database logging & applicant ranking
 - [x] Backend: AI resume analysis (Gemini/Groq/mock)
 - [x] Resume diagnostic report page
 - [x] Backend & frontend scaffolding
+
 - [ ] Connect Supabase Auth live project credentials
 - [ ] Connect Postgres database via Alembic migration
 

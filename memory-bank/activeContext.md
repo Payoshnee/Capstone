@@ -55,7 +55,14 @@ Converting imported stitch frontend designs from `stitch_ai_interview_prep_platf
     - Created comprehensive, modern root [`README.md`](file:///c:/Users/vedan/Desktop/Capstone/README.md) covering PrepPilot architecture, 7 microservices, $0 free-tier stack, quickstart guide, API conventions, and engineering rules.
     - Updated `frontend/README.md` with Next.js 16 setup, App Router structure, and Obsidian Gloss Enterprise tokens.
     - Re-verified production build (`npm run build`) compiling cleanly with 0 errors across all 11 routes.
+11. Built Complete Backend ATS Resume Parsing & Scoring Engine:
+    - Structured text & layout parser (`parser.py`): deterministic contact extraction (Name, Email, Phone, LinkedIn, GitHub, Location), section segmentation, work experience, education with GPAs, and categorized skills.
+    - Comprehensive SDE & Data Keyword Pool (`keyword_pool.py`): role taxonomies for SDE, Backend, Frontend, Fullstack, DevOps, Data Analyst, Data Engineer, Data Scientist, and ML/AI Engineer, plus 29 programming languages, frameworks, DBs, cloud tools, concepts, and action verbs.
+    - Keyword Matcher (`matcher.py`): exact & semantic matching against custom JDs and standardized role profiles, calculating matched vs missing keywords, keyword density, and match percentages.
+    - Formatting & Structure Evaluator (`evaluator.py`): section completeness scoring (Contact, Experience, Education, Skills, Projects), layout word density, bullet rhythm, action verbs ratio, and quantifiable metrics ratio.
+    - Multi-Pillar Score Assignment & Applicant Ranking (`service.py` & `api.py`): composite 0-100 score formula, grade assignment (A+ to F), candidate database logging (`CandidateApplicant` & `ResumeReport`), and ranking endpoint (`POST /api/resume/rank`) ordering applicants from highest to lowest score.
+    - Verified with comprehensive test suites: `tests/test_ats_engine.py` (all 6/6 tests passed) and `tests/test_api_endpoints.py` (all FastAPI endpoints passed).
 
 ## Next Steps
-1. Present sanitization and new README to the user for review.
-2. Proceed to Stage 5: Convert `holistic_candidate_readiness_report` to `frontend/app/report/page.tsx`.
+1. Complete Stage 5 frontend integration: Convert `holistic_candidate_readiness_report` to `frontend/app/report/page.tsx`.
+2. Wire the new ATS endpoints (`/api/resume/analyze`, `/api/resume/keywords`, `/api/resume/rank`) with the frontend candidate and recruiter dashboards.
