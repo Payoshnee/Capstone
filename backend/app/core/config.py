@@ -6,6 +6,8 @@ class Settings(BaseSettings):
     SUPABASE_URL: str = ""
     SUPABASE_ANON_KEY: str = ""
     SUPABASE_JWT_SECRET: str = ""
+    AUTH_SECRET: str = ""
+    AUTO_APPROVE_EXPERTS: bool = False
     GEMINI_API_KEY: str = ""
     GROQ_API_KEY: str = ""
     CORS_ORIGINS: str = "http://localhost:3000"

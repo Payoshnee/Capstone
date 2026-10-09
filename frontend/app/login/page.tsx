@@ -1,13 +1,37 @@
 "use client";
 
 import Link from "next/link";
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Rocket } from "lucide-react";
+import { login } from "@/lib/booking-api";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const session = await login(email, password);
+      router.push(session.user.role === "expert" ? "/availability" : "/bookings");
+      router.refresh();
+    } catch (authError) {
+      setError(authError instanceof Error ? authError.message : "Could not log in.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
       <div className="w-full max-w-md space-y-6">
@@ -24,20 +48,23 @@ export default function LoginPage() {
             <CardTitle>Log In</CardTitle>
             <CardDescription>Enter your email and password below</CardDescription>
           </CardHeader>
+          <form onSubmit={submit}>
           <CardContent className="space-y-4">
+            {error && <div role="alert" className="rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-800">{error}</div>}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" required />
+              <Input id="email" type="email" placeholder="m@example.com" value={email} onChange={event => setEmail(event.target.value)} autoComplete="email" required />
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
                 <Link href="#" className="text-sm text-primary hover:underline">Forgot password?</Link>
               </div>
-              <Input id="password" type="password" required />
+              <Input id="password" type="password" value={password} onChange={event => setPassword(event.target.value)} autoComplete="current-password" required />
             </div>
-            <Button className="w-full mt-4">Log In</Button>
+            <Button className="w-full mt-4" disabled={loading}>{loading ? "Logging in…" : "Log In"}</Button>
           </CardContent>
+          </form>
           <CardFooter className="flex flex-col gap-4">
             <div className="text-sm text-center text-muted-foreground w-full">
               Don&apos;t have an account?{" "}

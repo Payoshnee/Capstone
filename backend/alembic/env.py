@@ -9,6 +9,7 @@ from alembic import context
 
 from app.core.config import settings
 from app.models.base import Base
+import app.models  # noqa: F401 - register model metadata
 
 config = context.config
 
