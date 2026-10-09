@@ -202,6 +202,7 @@ export default function VideoPage() {
                   }}
                   userInfo={{
                     displayName: "PrepPilot Candidate",
+                    email: "candidate@preppilot.com",
                   }}
                   getIFrameRef={(iframe) => {
                     iframe.style.height = "700px";
