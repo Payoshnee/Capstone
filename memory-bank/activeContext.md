@@ -55,15 +55,17 @@ Converting imported stitch frontend designs from `stitch_ai_interview_prep_platf
     - Created comprehensive, modern root [`README.md`](file:///c:/Users/vedan/Desktop/Capstone/README.md) covering PrepPilot architecture, 7 microservices, $0 free-tier stack, quickstart guide, API conventions, and engineering rules.
     - Updated `frontend/README.md` with Next.js 16 setup, App Router structure, and Obsidian Gloss Enterprise tokens.
     - Re-verified production build (`npm run build`) compiling cleanly with 0 errors across all 11 routes.
-11. Built Complete Backend ATS Resume Parsing & Scoring Engine:
-    - Structured text & layout parser (`parser.py`): deterministic contact extraction (Name, Email, Phone, LinkedIn, GitHub, Location), section segmentation, work experience, education with GPAs, and categorized skills.
-    - Comprehensive SDE & Data Keyword Pool (`keyword_pool.py`): role taxonomies for SDE, Backend, Frontend, Fullstack, DevOps, Data Analyst, Data Engineer, Data Scientist, and ML/AI Engineer, plus 29 programming languages, frameworks, DBs, cloud tools, concepts, and action verbs.
-    - Keyword Matcher (`matcher.py`): exact & semantic matching against custom JDs and standardized role profiles, calculating matched vs missing keywords, keyword density, and match percentages.
-    - Formatting & Structure Evaluator (`evaluator.py`): section completeness scoring (Contact, Experience, Education, Skills, Projects), layout word density, bullet rhythm, action verbs ratio, and quantifiable metrics ratio.
-    - Multi-Pillar Score Assignment & Applicant Ranking (`service.py` & `api.py`): composite 0-100 score formula, grade assignment (A+ to F), candidate database logging (`CandidateApplicant` & `ResumeReport`), and ranking endpoint (`POST /api/resume/rank`) ordering applicants from highest to lowest score.
-    - Verified with comprehensive test suites: `tests/test_ats_engine.py` (all 6/6 tests passed) and `tests/test_api_endpoints.py` (all FastAPI endpoints passed).
-12. Created [`backend/README.md`](file:///c:/Users/vedan/Desktop/Capstone/backend/README.md) with quickstart instructions, virtual environment setup, hot-reload server launch commands, API documentation links, and curl examples.
+11. Built Complete Backend ATS Resume Parsing & Scoring Engine (text extraction, structured parser, SDE/Data keyword taxonomy, matcher, layout evaluation, ranking API).
+12. Created backend/README.md with quickstart instructions and API curl examples.
+13. Committed local ATS demo mode and upload dropzone hero cleanly to `frontend` branch.
+14. Fetched and audited 4 active teammate Pull Requests into local branches:
+    - **PR 1 (`pr-1`)**: Interview feedback report (`/api/feedback`, `/feedback` page). In-memory fallback included.
+    - **PR 2 (`pr-2`)**: Video mock interview service (`/api/video`, `@jitsi/react-sdk`, `/video` page). In-memory room management.
+    - **PR 3 (`pr-3`)**: End-to-end authorization and RBAC (candidate/expert/admin, `/api/auth/demo-login`, `/admin`, `/expert`, `/profile`).
+    - **PR 4 (`pr-4`)**: Exact duplicate of PR 3 (identical commit `781fb51`). Marked to be closed as duplicate.
+    - **PR 5 (`pr-5`)**: Expert availability and booking flow (`/api/experts`, `/api/bookings`, `/booking` page). In-memory / demoSlots fallback included.
 
 ## Next Steps
-1. Complete Stage 5 frontend integration: Convert `holistic_candidate_readiness_report` to `frontend/app/report/page.tsx`.
-2. Wire the new ATS endpoints (`/api/resume/analyze`, `/api/resume/keywords`, `/api/resume/rank`) with the frontend candidate and recruiter dashboards.
+1. Guide user through testing and reviewing each of the 4 PRs individually.
+2. Recommend merging PR 3 (Auth/RBAC) -> PR 5 (Booking) -> PR 2 (Video) -> PR 1 (Feedback) to ensure clean foundation and zero regressions.
+3. Once teammate PRs are merged to `main`, integrate `main` into `frontend` branch with our ATS Resume Review and Obsidian design suite.
