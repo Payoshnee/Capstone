@@ -2,15 +2,27 @@ from typing import AsyncGenerator
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from app.core.config import settings
 
-# Graceful degradation if DATABASE_URL is somehow invalid or mock
-try:
-    engine = create_async_engine(settings.DATABASE_URL, echo=False)
-    async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-except Exception:
-    engine = None
-    async_session_maker = None
+# Check if DATABASE_URL is configured with real credentials or a placeholder
+def is_valid_db_url(url: str | None) -> bool:
+    if not url:
+        return False
+    placeholders = ["@host:", "user:pass", "localhost:5432/dbname", "your-project"]
+    if any(p in url for p in placeholders):
+        return False
+    return True
 
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
+engine = None
+async_session_maker = None
+
+if is_valid_db_url(settings.DATABASE_URL):
+    try:
+        engine = create_async_engine(settings.DATABASE_URL, echo=False)
+        async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+    except Exception:
+        engine = None
+        async_session_maker = None
+
+async def get_db() -> AsyncGenerator[AsyncSession | None, None]:
     if not async_session_maker:
         yield None
         return
@@ -23,3 +35,4 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             raise
         finally:
             await session.close()
+

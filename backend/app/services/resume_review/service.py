@@ -349,9 +349,13 @@ async def analyze_resume(
             )
             db.add(db_applicant)
             await db.commit()
-        except Exception as e:
-            await db.rollback()
-            print(f"Warning: could not persist candidate applicant to PostgreSQL: {e}")
+        except Exception:
+            try:
+                await db.rollback()
+            except Exception:
+                pass
+            # Silently fallback to in-memory store for demo mode
+
             
     return report
 

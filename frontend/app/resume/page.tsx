@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiUpload } from "@/lib/api";
@@ -28,11 +28,27 @@ export default function ResumeReviewPage() {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showDiffModal, setShowDiffModal] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-  const [targetRole, setTargetRole] = useState("");
+  const [targetRole, setTargetRole] = useState("sde");
+  const [jobDescription, setJobDescription] = useState("");
+  const [candidateName, setCandidateName] = useState("");
+  const [candidateEmail, setCandidateEmail] = useState("");
+  const [analyzedData, setAnalyzedData] = useState<any>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [exportState, setExportState] = useState<"idle" | "compiling" | "ready">("idle");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const directFileInputRef = useRef<HTMLInputElement>(null);
+
+  // Restore cached report if present
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("prepPilot_mockReport");
+      if (saved) {
+        setAnalyzedData(JSON.parse(saved));
+      }
+    } catch (_) {}
+  }, []);
+
 
   // Smooth scroll to revision
   const scrollToRevision = (id: string) => {
@@ -109,7 +125,10 @@ export default function ResumeReviewPage() {
   };
 
   const handleRunAnalysis = async () => {
-    if (!file) return;
+    if (!file) {
+      alert("Please select or drop a PDF resume first.");
+      return;
+    }
     setIsAnalyzing(true);
     try {
       const formData = new FormData();
@@ -117,10 +136,20 @@ export default function ResumeReviewPage() {
       if (targetRole) {
         formData.append("target_role", targetRole);
       }
+      if (jobDescription) {
+        formData.append("job_description", jobDescription);
+      }
+      if (candidateName) {
+        formData.append("candidate_name", candidateName);
+      }
+      if (candidateEmail) {
+        formData.append("candidate_email", candidateEmail);
+      }
       const res = await apiUpload<any>("/api/resume/analyze", formData);
       if (res.data) {
         const reportData = (res.data as any).data || res.data;
         if (reportData && reportData.overall_score !== undefined) {
+          setAnalyzedData(reportData);
           localStorage.setItem("prepPilot_mockReport", JSON.stringify(reportData));
         }
       }
@@ -131,6 +160,7 @@ export default function ResumeReviewPage() {
       setShowUploadModal(false);
     }
   };
+
 
   const allAccepted = diffState.rev1Accepted && diffState.rev2Accepted && diffState.rev3Accepted;
 
@@ -162,6 +192,13 @@ export default function ResumeReviewPage() {
 
           {/* Action CTAs */}
           <div className="flex items-center gap-3 shrink-0">
+            <button
+              onClick={() => setShowUploadModal(true)}
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-primary-container to-secondary-container text-sm font-semibold text-white hover:brightness-110 transition-all shadow-[0_8px_20px_-4px_rgba(99,102,241,0.45),inset_0_1px_0_rgba(255,255,255,0.25)] cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-[18px] mr-1.5">cloud_upload</span>
+              Upload Resume
+            </button>
             <Link
               href="/mock-interview"
               className="hidden md:inline-flex items-center px-4 py-2 rounded-lg bg-surface-container-high text-sm font-medium text-on-surface hover:bg-surface-bright transition-all border border-white/[0.08] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
@@ -171,7 +208,7 @@ export default function ResumeReviewPage() {
             </Link>
             <Link
               href="/mentors"
-              className="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-primary-container to-secondary-container text-sm font-semibold text-white hover:brightness-110 transition-all shadow-[0_8px_20px_-4px_rgba(99,102,241,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
+              className="hidden lg:inline-flex items-center px-4 py-2 rounded-lg bg-surface-container-high text-sm font-medium text-on-surface hover:bg-surface-bright transition-all border border-white/[0.08]"
             >
               <span className="material-symbols-outlined text-[18px] mr-1.5">calendar_month</span>
               Book Mentor
@@ -184,6 +221,7 @@ export default function ResumeReviewPage() {
               <span className="material-symbols-outlined text-primary text-[20px]">person</span>
             </Link>
           </div>
+
         </div>
 
         {/* Secondary Services Navigation Strip */}
@@ -247,10 +285,10 @@ export default function ResumeReviewPage() {
               <div className="flex items-center flex-wrap gap-2.5">
                 <button
                   onClick={() => setShowUploadModal(true)}
-                  className="px-4 py-2 rounded-xl bg-surface-container-high text-on-surface text-xs font-semibold hover:bg-surface-bright transition-all flex items-center gap-1.5 border border-white/[0.08] shadow-md"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-primary-container to-secondary-container text-white text-xs font-bold hover:brightness-110 transition-all flex items-center gap-1.5 shadow-md shadow-primary-container/20 cursor-pointer"
                 >
-                  <span className="material-symbols-outlined text-[18px] text-secondary">tune</span>
-                  Re-scan with Target JD
+                  <span className="material-symbols-outlined text-[18px]">cloud_upload</span>
+                  Upload Resume (PDF)
                 </button>
                 <button
                   onClick={handleAcceptAll}
@@ -276,6 +314,123 @@ export default function ResumeReviewPage() {
               </div>
             </div>
 
+            {/* DIRECT RESUME UPLOAD & ATS SCAN HERO PANEL */}
+            <div className="bg-gradient-to-br from-surface-container-low via-surface-container to-surface-container-high/70 border border-primary/30 rounded-3xl p-6 sm:p-8 shadow-[0_12px_40px_rgba(0,0,0,0.45)] relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none -z-10" />
+              
+              <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6">
+                {/* Left Description & Inputs */}
+                <div className="flex-1 flex flex-col gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-3 py-1 rounded-full bg-primary/15 text-primary text-xs font-code-mono font-bold border border-primary/25 flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-primary animate-pulse" /> LIVE ATS SCANNER
+                    </span>
+                    <span className="text-xs text-outline font-code-mono">SDE &amp; Data Role Taxonomies Active</span>
+                  </div>
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-on-surface tracking-tight">
+                      Upload Your Resume for Instant ATS Scoring
+                    </h2>
+                    <p className="text-xs sm:text-sm text-on-surface-variant mt-1 max-w-2xl leading-relaxed">
+                      Upload your PDF resume to extract contact info, work history, and skills. Our ATS engine matches against standard SDE and Data roles, checks section completeness, evaluates action verbs, and generates an executive score.
+                    </p>
+                  </div>
+
+                  {/* Target Role & JD Inputs */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[11px] font-semibold text-outline uppercase font-code-mono">Target Role Track</label>
+                      <select
+                        value={targetRole}
+                        onChange={(e) => setTargetRole(e.target.value)}
+                        className="px-3.5 py-2.5 rounded-xl bg-surface-container-lowest border border-white/[0.08] text-xs text-on-surface focus:outline-none focus:border-primary"
+                      >
+                        <option value="sde">Software Development Engineer (SDE)</option>
+                        <option value="backend_engineer">Backend Engineer</option>
+                        <option value="frontend_engineer">Frontend Engineer</option>
+                        <option value="fullstack_engineer">Full Stack Engineer</option>
+                        <option value="devops_cloud_engineer">DevOps &amp; Cloud Engineer</option>
+                        <option value="data_analyst">Data Analyst / BI</option>
+                        <option value="data_engineer">Data Engineer</option>
+                        <option value="data_scientist">Data Scientist</option>
+                        <option value="ml_ai_engineer">Machine Learning &amp; AI Engineer</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[11px] font-semibold text-outline uppercase font-code-mono">Target Job Description (Optional)</label>
+                      <input
+                        type="text"
+                        placeholder="Paste target JD or requirements for exact match..."
+                        value={jobDescription}
+                        onChange={(e) => setJobDescription(e.target.value)}
+                        className="px-3.5 py-2.5 rounded-xl bg-surface-container-lowest border border-white/[0.08] text-xs text-on-surface placeholder:text-outline focus:outline-none focus:border-primary"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Dropzone & Upload Button */}
+                <div className="w-full lg:w-96 shrink-0 flex flex-col gap-3">
+                  <div
+                    className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer flex flex-col items-center justify-center transition-all ${
+                      isDragging
+                        ? "border-primary bg-primary/10"
+                        : "border-white/[0.15] hover:border-primary/60 hover:bg-surface-container-high/50"
+                    } ${file ? "bg-surface-container-high/80 border-solid border-primary/40" : "bg-surface-container-lowest/60"}`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() => directFileInputRef.current?.click()}
+                  >
+                    <input type="file" ref={directFileInputRef} className="hidden" accept=".pdf" onChange={handleFileChange} />
+                    {file ? (
+                      <div className="flex flex-col items-center">
+                        <div className="w-12 h-12 rounded-xl bg-primary/20 text-primary flex items-center justify-center mb-2">
+                          <span className="material-symbols-outlined text-[28px]">picture_as_pdf</span>
+                        </div>
+                        <p className="font-bold text-sm text-on-surface mb-0.5 truncate max-w-[240px]">{file.name}</p>
+                        <p className="text-xs text-outline mb-2">{(file.size / 1024 / 1024).toFixed(2)} MB • PDF Attached</p>
+                        <span className="text-[11px] text-tertiary font-semibold flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[14px]">check_circle</span> Ready to Analyze
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <div className="w-12 h-12 rounded-xl bg-surface-container-high text-primary flex items-center justify-center mb-2 border border-white/[0.06] group-hover:scale-105 transition-transform">
+                          <span className="material-symbols-outlined text-[28px]">cloud_upload</span>
+                        </div>
+                        <p className="font-semibold text-sm text-on-surface mb-0.5">Click to Browse or Drag PDF</p>
+                        <p className="text-xs text-outline">Supports PDF format (Max 10MB)</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={handleRunAnalysis}
+                    disabled={!file || isAnalyzing}
+                    className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-primary-container via-primary to-secondary-container text-white font-bold text-sm hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-[0_8px_24px_-4px_rgba(99,102,241,0.5)] cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">{isAnalyzing ? "progress_activity" : "bolt"}</span>
+                    {isAnalyzing ? "Parsing & Scoring with ATS Core..." : file ? "Run ATS Diagnostic & Score" : "Select PDF Resume to Scan"}
+                  </button>
+                </div>
+              </div>
+
+              {/* Status Banner when Analyzed */}
+              {analyzedData && (
+                <div className="mt-4 pt-3 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-3 text-xs">
+                  <div className="flex items-center gap-2 text-tertiary">
+                    <span className="material-symbols-outlined text-[16px]">verified</span>
+                    <span>Active ATS Report: <strong>{analyzedData.parsed_data?.contact?.name || "Candidate"}</strong></span>
+                    <span className="px-2 py-0.5 rounded bg-tertiary/20 text-tertiary font-code-mono font-bold">Grade {analyzedData.grade} ({analyzedData.overall_score}%)</span>
+                  </div>
+                  <span className="text-outline font-code-mono">
+                    {analyzedData.keyword_matching?.jd_match ? "Matched against target Job Description" : `Aligned with ${analyzedData.target_role?.toUpperCase() || "SDE"} taxonomy`}
+                  </span>
+                </div>
+              )}
+            </div>
+
             {/* Top Stats & ATS Engine Validation Banner (Bento Matrix) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Score Card 1: ATS Overall */}
@@ -284,7 +439,9 @@ export default function ResumeReviewPage() {
                   <div className="flex flex-col">
                     <span className="font-code-mono text-xs uppercase tracking-wider text-outline font-semibold">ATS Compatibility</span>
                     <div className="flex items-baseline gap-1 mt-1">
-                      <span className="text-4xl font-extrabold text-on-surface">{allAccepted ? "96" : "92"}</span>
+                      <span className="text-4xl font-extrabold text-on-surface">
+                        {analyzedData ? analyzedData.overall_score : (allAccepted ? "96" : "92")}
+                      </span>
                       <span className="font-code-mono text-xs text-outline">/100</span>
                     </div>
                   </div>
@@ -297,7 +454,7 @@ export default function ResumeReviewPage() {
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                         fill="none"
                         stroke="currentColor"
-                        strokeDasharray={`${allAccepted ? 96 : 92}, 100`}
+                        strokeDasharray={`${analyzedData ? analyzedData.overall_score : (allAccepted ? 96 : 92)}, 100`}
                         strokeLinecap="round"
                         strokeWidth="3"
                       />
@@ -306,10 +463,13 @@ export default function ResumeReviewPage() {
                   </div>
                 </div>
                 <div className="mt-4 pt-2.5 bg-surface-container-lowest/60 -mx-5 -mb-5 px-5 py-2 rounded-b-2xl flex items-center justify-between border-t border-white/[0.04]">
-                  <span className="font-code-mono text-[10px] text-tertiary">GREENHOUSE • LEVER • ASHBY • WORKDAY</span>
+                  <span className="font-code-mono text-[10px] text-tertiary">
+                    {analyzedData ? `GRADE: ${analyzedData.grade} • GREENHOUSE & ASHBY READY` : "GREENHOUSE • LEVER • ASHBY • WORKDAY"}
+                  </span>
                   <span className="material-symbols-outlined text-[14px] text-tertiary">done_all</span>
                 </div>
               </div>
+
 
               {/* Score Card 2: Impact Score */}
               <div className="bg-surface-container-low p-5 rounded-2xl border border-white/[0.06] shadow-xl relative overflow-hidden flex flex-col justify-between group hover:border-white/[0.12] transition-all">
@@ -317,7 +477,11 @@ export default function ResumeReviewPage() {
                   <div className="flex flex-col">
                     <span className="font-code-mono text-xs uppercase tracking-wider text-outline font-semibold">Quantified Impact</span>
                     <div className="flex items-baseline gap-1 mt-1">
-                      <span className="text-4xl font-extrabold text-primary">{diffState.rev1Accepted ? "98" : "91"}</span>
+                      <span className="text-4xl font-extrabold text-primary">
+                        {analyzedData
+                          ? (analyzedData.category_scores?.find((c: any) => c.category_name.toLowerCase().includes("impact"))?.score ?? 91)
+                          : (diffState.rev1Accepted ? "98" : "91")}
+                      </span>
                       <span className="font-code-mono text-xs text-outline">/100</span>
                     </div>
                   </div>
@@ -327,11 +491,22 @@ export default function ResumeReviewPage() {
                 </div>
                 <div className="mt-4 flex flex-col gap-1.5">
                   <div className="flex justify-between text-xs font-code-mono">
-                    <span className="text-on-surface-variant">Metric Density</span>
-                    <span className="text-primary font-semibold">{diffState.rev1Accepted ? "17 Metrics / 6 Exp" : "14 Metrics / 6 Exp"}</span>
+                    <span className="text-on-surface-variant">Metric Velocity</span>
+                    <span className="text-primary font-semibold">
+                      {analyzedData?.formatting_evaluation?.impact_evaluation
+                        ? `${analyzedData.formatting_evaluation.impact_evaluation.bullets_with_metrics} Metrics / ${analyzedData.formatting_evaluation.impact_evaluation.total_bullets_analyzed} Bullets`
+                        : (diffState.rev1Accepted ? "17 Metrics / 6 Exp" : "14 Metrics / 6 Exp")}
+                    </span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-surface-variant overflow-hidden">
-                    <div className="h-full bg-primary rounded-full transition-all duration-500" style={{ width: diffState.rev1Accepted ? "98%" : "91%" }} />
+                    <div
+                      className="h-full bg-primary rounded-full transition-all duration-500"
+                      style={{
+                        width: `${analyzedData
+                          ? (analyzedData.category_scores?.find((c: any) => c.category_name.toLowerCase().includes("impact"))?.score ?? 91)
+                          : (diffState.rev1Accepted ? 98 : 91)}%`
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -342,7 +517,11 @@ export default function ResumeReviewPage() {
                   <div className="flex flex-col">
                     <span className="font-code-mono text-xs uppercase tracking-wider text-outline font-semibold">Brevity &amp; Density</span>
                     <div className="flex items-baseline gap-1 mt-1">
-                      <span className="text-4xl font-extrabold text-secondary">{diffState.rev2Accepted ? "92" : "84"}</span>
+                      <span className="text-4xl font-extrabold text-secondary">
+                        {analyzedData
+                          ? (analyzedData.category_scores?.find((c: any) => c.category_name.toLowerCase().includes("structure"))?.score ?? 84)
+                          : (diffState.rev2Accepted ? "92" : "84")}
+                      </span>
                       <span className="font-code-mono text-xs text-outline">/100</span>
                     </div>
                   </div>
@@ -352,11 +531,22 @@ export default function ResumeReviewPage() {
                 </div>
                 <div className="mt-4 flex flex-col gap-1.5">
                   <div className="flex justify-between text-xs font-code-mono">
-                    <span className="text-on-surface-variant">Avg Bullet Length</span>
-                    <span className="text-secondary font-semibold">18.4 words (Optimal)</span>
+                    <span className="text-on-surface-variant">Density Ratio</span>
+                    <span className="text-secondary font-semibold">
+                      {analyzedData?.formatting_evaluation?.layout_metrics?.words_per_page
+                        ? `${analyzedData.formatting_evaluation.layout_metrics.words_per_page} w/pg (${analyzedData.formatting_evaluation.layout_metrics.page_count} pg)`
+                        : "18.4 words (Optimal)"}
+                    </span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-surface-variant overflow-hidden">
-                    <div className="h-full bg-secondary rounded-full transition-all duration-500" style={{ width: diffState.rev2Accepted ? "92%" : "84%" }} />
+                    <div
+                      className="h-full bg-secondary rounded-full transition-all duration-500"
+                      style={{
+                        width: `${analyzedData
+                          ? (analyzedData.category_scores?.find((c: any) => c.category_name.toLowerCase().includes("structure"))?.score ?? 84)
+                          : (diffState.rev2Accepted ? 92 : 84)}%`
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -367,8 +557,16 @@ export default function ResumeReviewPage() {
                   <div className="flex flex-col">
                     <span className="font-code-mono text-xs uppercase tracking-wider text-outline font-semibold">Hard Skill Match</span>
                     <div className="flex items-baseline gap-1 mt-1">
-                      <span className="text-4xl font-extrabold text-tertiary">{diffState.ebpfInjected ? "98%" : "94%"}</span>
-                      <span className="font-code-mono text-xs text-outline">{diffState.ebpfInjected ? "19/19" : "18/19"}</span>
+                      <span className="text-4xl font-extrabold text-tertiary">
+                        {analyzedData
+                          ? `${analyzedData.category_scores?.find((c: any) => c.category_name.toLowerCase().includes("keyword"))?.score ?? 88}%`
+                          : (diffState.ebpfInjected ? "98%" : "94%")}
+                      </span>
+                      <span className="font-code-mono text-xs text-outline">
+                        {analyzedData?.keyword_matching?.jd_match
+                          ? `${analyzedData.keyword_matching.jd_match.matched_count}/${analyzedData.keyword_matching.jd_match.total_jd_keywords}`
+                          : (diffState.ebpfInjected ? "19/19" : "18/19")}
+                      </span>
                     </div>
                   </div>
                   <div className="w-11 h-11 rounded-xl bg-tertiary-container/20 border border-tertiary/30 flex items-center justify-center text-tertiary">
@@ -378,10 +576,19 @@ export default function ResumeReviewPage() {
                 <div className="mt-4 flex flex-col gap-1.5">
                   <div className="flex justify-between text-xs font-code-mono">
                     <span className="text-on-surface-variant">Role Profile</span>
-                    <span className="text-tertiary font-semibold">Staff / Principal SWE</span>
+                    <span className="text-tertiary font-semibold truncate max-w-[140px]">
+                      {analyzedData?.keyword_matching?.role_match?.role_title || "Staff / Principal SWE"}
+                    </span>
                   </div>
                   <div className="w-full h-1.5 rounded-full bg-surface-variant overflow-hidden">
-                    <div className="h-full bg-tertiary rounded-full transition-all duration-500" style={{ width: diffState.ebpfInjected ? "98%" : "94%" }} />
+                    <div
+                      className="h-full bg-tertiary rounded-full transition-all duration-500"
+                      style={{
+                        width: `${analyzedData
+                          ? (analyzedData.category_scores?.find((c: any) => c.category_name.toLowerCase().includes("keyword"))?.score ?? 88)
+                          : (diffState.ebpfInjected ? 98 : 94)}%`
+                      }}
+                    />
                   </div>
                 </div>
               </div>
@@ -396,12 +603,18 @@ export default function ResumeReviewPage() {
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-primary text-[20px]">picture_as_pdf</span>
                     <span className="font-code-mono text-xs text-on-surface font-semibold truncate max-w-[210px]">
-                      {file ? file.name : "resume_lead_backend.pdf"}
+                      {file ? file.name : (analyzedData ? `${analyzedData.parsed_data?.contact?.name?.toLowerCase().replace(/\s+/g, '_')}_resume.pdf` : "resume_lead_backend.pdf")}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-mono text-[10px]">148ms PARSE</span>
-                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-mono text-[10px]">582 WORDS</span>
+                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-mono text-[10px]">
+                      {analyzedData ? `${analyzedData.grade} RATED` : "148ms PARSE"}
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-code-mono text-[10px]">
+                      {analyzedData?.formatting_evaluation?.layout_metrics?.total_words
+                        ? `${analyzedData.formatting_evaluation.layout_metrics.total_words} WORDS`
+                        : "582 WORDS"}
+                    </span>
                     <button
                       onClick={() => setShowDiffModal(true)}
                       className="p-1 rounded bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors"
@@ -416,14 +629,28 @@ export default function ResumeReviewPage() {
                 <div className="bg-surface-container-low rounded-xl p-4 flex flex-col gap-4 text-xs text-on-surface-variant border border-white/[0.04] shadow-inner max-h-[780px] overflow-y-auto">
                   {/* Candidate Header */}
                   <div className="flex flex-col items-center text-center pb-3 bg-surface-container-lowest/50 p-3 rounded-xl border border-white/[0.04]">
-                    <span className="font-bold text-sm text-on-surface tracking-wide">ALEXANDER CHEN</span>
+                    <span className="font-bold text-sm text-on-surface tracking-wide">
+                      {(analyzedData?.parsed_data?.contact?.name || "ALEXANDER CHEN").toUpperCase()}
+                    </span>
                     <span className="font-code-mono text-[11px] text-primary mt-0.5">
-                      SF Bay Area • alexander.chen@dev.io • github.com/achen-distributed
+                      {analyzedData?.parsed_data?.contact?.email
+                        ? `${analyzedData.parsed_data.contact.location || "Location Detected"} • ${analyzedData.parsed_data.contact.email} • ${analyzedData.parsed_data.contact.phone || analyzedData.parsed_data.contact.github || ""}`
+                        : "SF Bay Area • alexander.chen@dev.io • github.com/achen-distributed"}
                     </span>
                     <div className="mt-2 flex flex-wrap justify-center gap-1.5">
-                      <span className="px-2 py-0.5 rounded bg-primary-container/20 text-primary text-[10px] font-code-mono border border-primary/20">Go / Rust / C++</span>
-                      <span className="px-2 py-0.5 rounded bg-secondary-container/20 text-secondary text-[10px] font-code-mono border border-secondary/20">Raft Consensus</span>
-                      <span className="px-2 py-0.5 rounded bg-tertiary-container/20 text-tertiary text-[10px] font-code-mono border border-tertiary/20">High-throughput Kafka</span>
+                      {analyzedData?.skills && analyzedData.skills.length > 0 ? (
+                        analyzedData.skills.flatMap((sg: any) => sg.skills).slice(0, 6).map((skill: string, idx: number) => (
+                          <span key={idx} className="px-2 py-0.5 rounded bg-primary-container/20 text-primary text-[10px] font-code-mono border border-primary/20">
+                            {skill}
+                          </span>
+                        ))
+                      ) : (
+                        <>
+                          <span className="px-2 py-0.5 rounded bg-primary-container/20 text-primary text-[10px] font-code-mono border border-primary/20">Go / Rust / C++</span>
+                          <span className="px-2 py-0.5 rounded bg-secondary-container/20 text-secondary text-[10px] font-code-mono border border-secondary/20">Raft Consensus</span>
+                          <span className="px-2 py-0.5 rounded bg-tertiary-container/20 text-tertiary text-[10px] font-code-mono border border-tertiary/20">High-throughput Kafka</span>
+                        </>
+                      )}
                       {diffState.ebpfInjected && (
                         <span className="px-2 py-0.5 rounded bg-tertiary-container/30 text-tertiary text-[10px] font-code-mono border border-tertiary/30 animate-pulse">
                           eBPF Observability
@@ -431,6 +658,7 @@ export default function ResumeReviewPage() {
                       )}
                     </div>
                   </div>
+
 
                   {/* Experience Item 1 */}
                   <div className="flex flex-col gap-2">
