@@ -4,27 +4,16 @@
 > just started). Add new items if scope shifts.
 
 ## What works
-- **Frontend Scaffolding**: Next.js 16 + TypeScript + Tailwind CSS + shadcn/ui + Lucide icons. Production build verified with 0 errors across 11 routes.
-- **Landing Page** (`/`): Modern, high-converting hero, stats, 3 core feature pillars, 4-step workflow, resume report preview, interactive FAQ, responsive navigation & footer.
-- **End-to-End Auth & RBAC Flow**:
-  - 3 Roles: `candidate`, `expert`, `admin`.
-  - Supabase Auth + Local Dev Dual-Mode: verifies live Supabase JWTs with `SUPABASE_JWT_SECRET` when present; provides zero-config local dev tokens for fast offline iteration.
-  - Role-protected endpoints via FastAPI dependencies: `get_current_user`, `require_candidate`, `require_expert`, `require_admin`.
-  - Standard `{ "data": ..., "error": null }` response shape enforced for all 401, 403, and 422 errors.
-  - Frontend `AuthProvider` & `useAuth` hook: session persistence in localStorage, Supabase integration, 1-click demo role switcher.
-  - Automatic `Authorization: Bearer <token>` injection on all frontend API requests (`apiGet`, `apiPost`, `apiPut`, `apiUpload`).
-  - Interactive Login (`/login`) with 1-click candidate, expert, and admin logins.
-  - Interactive Signup (`/signup`) with candidate vs expert role selection.
-  - Role-based route guard (`components/auth/ProtectedRoute.tsx`) with access restricted alerts and quick role switches.
-  - Navbar (`components/Navbar.tsx`) with dynamic role badges, active role indicators, and instant role switcher dropdown.
-  - Admin Console (`/admin`): live user directory, instant role change actions, and expert application approval.
-  - Expert Mentorship Hub (`/expert`): credentials management, domain specialties, bio, and verification status.
-- **Candidate Profile** (`/profile`): Connected to `useAuth` and backend candidate profile API with personal info, target role, experience level, target companies, and skill chips.
-- **Resume Upload & Scanner** (`/resume`): Drag-and-drop PDF upload, target role specification, 4-step animated scanning progression, connected to backend `apiUpload` with client-side fallback.
-- **Resume Diagnostic Report** (`/resume/report`): Executive summary, letter grade, radial overall score gauge (0-100), 4-pillar score breakdown (Impact, Technical Depth, ATS Compatibility, Structure & Brevity), detected skills grouped by category, strengths vs areas for improvement, actionable before/after bullet improvement cards with priority badges, and bridge CTA to start mock interview.
+- **Frontend Scaffolding & Design System**: Next.js 16 + TypeScript + Tailwind CSS v4 + Obsidian Gloss Enterprise design tokens (`#11131b` dark surfaces, electric indigo `#c0c1ff`/`#8083ff`, violet, emerald `#4edea3`, Plus Jakarta Sans, Inter, JetBrains Mono, Google Material Symbols). Production build verified with 0 errors.
+- **Master Platform Ecosystem Landing Page** (`/`): High-converting hero with atmospheric glows, interactive split hero demo (target JD blueprint vs live session switcher between 24/7 AI Interviewer with live audio waveform & rubric scores, and Mentor Room), 7-microservice expansive showcase cards (Resume ATS, AI Mock, Mentor Marketplace, Readiness Radar, Jobs Scraper, Custom JD Designer, Institutional Teams OS), 4-step evidence loop, testimonials, transparent pricing, and enterprise footer.
+- **Auth Flow** (`/login`, `/signup`): Authentication pages with candidate/expert role selection and guest/demo flow.
+- **Candidate Profile** (`/profile`): Personal info, target role, experience level, target companies, key skill chips, recent reports sidebar, interview cards.
+- **Resume Review & ATS Diagnostic Suite** (`/resume`, `/resume/report`): Complete Obsidian Gloss Enterprise conversion of `resume_review_ats_diagnostic_suite`. 4-card Bento Matrix (ATS Compatibility radial score with Greenhouse/Lever/Ashby/Workday badges, Quantified Impact, Brevity & Density, Hard Skill Match), parsed resume heatmaps with inline before/after line-through diffs and skill cloud, 4-pillar diagnostic engine (Quantified Impact XYZ formula, word length histogram SVG, verb velocity bars, keyword taxonomy table with quick inject), live state synchronization between diff acceptance and preview pane, Re-scan with Target JD dropzone modal, and PDF export.
+- **24/7 AI Adaptive Mock Interviewer** (`/mock-interview`): Complete Obsidian Gloss Enterprise conversion of `24_7_ai_adaptive_mock_interviewer`. Live proctor session bar with running timer, dual-core stream grid (Neural AI Proctor with animated equalizer visualizer bars + challenge injection indicator, Candidate camera/mic stream controls), live transcript stream with real-time speech telemetry (WPM, filler word count, audio input buffer indicator), System Architecture Whiteboard modal with ASCII diagram editor and broadcast action, live 3-pillar evaluation telemetry (System Depth, Structural Clarity, STAR Execution), 6-axis SVG competency radar chart, and Finish Round evaluation summary modal.
+- **Human Mentor Marketplace & WebRTC Prep** (`/mentors`): Complete Obsidian Gloss Enterprise conversion of `human_mentor_marketplace_webrtc_prep`. Upcoming Jitsi session banner (Marcus Vance, Google Cloud Infra L7, pre-flight hardware diagnostics, attached blueprint selector), 3 evaluation assurance pillars (60-Min SLA, Calibration Matrix, Private Replay), fast multi-tag filtering (FAANG+ companies, Distributed Systems / AI / Leadership domains), sort dropdown, 4 calibrated mentor cards with dynamic slot selection, interactive Jitsi WebRTC pre-flight connection modal, dynamic booking & schedule confirmation modal, and recent calibrated rubric showcase (#EXP-89021-CALIBRATED) with simulated PDF export.
 - **Backend Core**: FastAPI layered architecture (`api/`, `services/`, `models/`, `schemas/`, `core/`), standard `{ data, error }` response schema, CORS middleware, health check endpoint.
-- **Resume Analysis Engine**: PDF extraction via `pypdf`, Gemini Flash integration + Groq fallback + dev mock engine for offline/free-tier resiliency, tested with real PDF payloads.
-- **Documentation & Memory Bank**: PrepPilot branding across all documentation, `/memory-bank` persistent context created, `ROADMAP.md` re-sequenced.
+- **Resume Analysis & ATS Scoring Engine**: Complete deterministic and AI-enhanced ATS software. PDF text and layout extraction, structured parsing (contact details, work experience, education with GPA, categorized skills), SDE and Data role keyword pools (9 roles + 29 languages + tools/DBs/cloud), direct JD and role keyword matching, section completeness, action verb and quantifiable metric evaluation, composite ATS scoring (0-100), candidate database logging (`CandidateApplicant`), and multi-applicant ranking (`POST /api/resume/rank`). Verified with automated test suites.
+- **Documentation & Memory Bank**: PrepPilot branding across all documentation, `/memory-bank` persistent context created, `ROADMAP.md` re-sequenced, `implementation_plan.md` created, repository sanitized (stale duplicate context files eliminated), and master root `README.md` created with comprehensive 7-microservice architecture and quickstart instructions.
 
 ## What's left (mirrors the MVP scope in `projectbrief.md`)
 
@@ -34,41 +23,50 @@
 - [x] Candidate profile page
 - [x] Resume upload page with drag-and-drop
 - [x] Backend: Resume PDF extraction
+- [x] Backend: Complete ATS text parsing & structure evaluation
+- [x] Backend: SDE & Data roles keyword pool and matching
+- [x] Backend: Candidate database logging & applicant ranking
 - [x] Backend: AI resume analysis (Gemini/Groq/mock)
 - [x] Resume diagnostic report page
 - [x] Backend & frontend scaffolding
-- [x] Auth with 3 roles (candidate, expert, admin)
-- [x] Role-Based Access Control (RBAC) in FastAPI
-- [x] Protected routes & Role-based UI in Next.js
-- [x] Admin approval flow for expert applications
-- [ ] Connect Supabase Auth live project credentials (when keys provided)
-- [ ] Connect Postgres database via Alembic migration (when DB URL provided)
 
-### Phase 2: AI mock interview
+- [ ] Connect Supabase Auth live project credentials
+- [ ] Connect Postgres database via Alembic migration
+
+### Auth & users
+- [ ] Supabase Auth wired into Next.js (signup/login/logout)
+- [ ] Role selection (candidate/expert) on signup
+- [ ] Admin approval flow for expert applications
+
+### Expert discovery
+- [ ] Expert profile creation form
+- [ ] Expert browse/filter page (by domain)
+
+### Booking & availability
+- [ ] Expert availability calendar (set weekly slots)
+- [ ] Candidate booking flow (pick slot, confirm)
+- [ ] Booking confirmation email
+
+### Video sessions
+- [ ] Jitsi room creation per booking
+- [ ] Join-call UI for both candidate and expert
+
+### AI interviewer
 - [ ] Domain/role selection UI for "Practice now"
 - [ ] Resume upload + Gemini-based parsing
 - [ ] Adaptive question/follow-up loop
 - [ ] AI-generated feedback report
 
-### Phase 3: Expert discovery & booking
-- [ ] Expert profile creation form
-- [ ] Expert browse/filter page (by domain)
-- [ ] Expert availability calendar (set weekly slots)
-- [ ] Candidate booking flow (pick slot, confirm)
-- [ ] Booking confirmation email
-
-### Phase 4: Video sessions & expert feedback
-- [ ] Jitsi room creation per booking
-- [ ] Join-call UI for both candidate and expert
+### Feedback & dashboards
 - [ ] Structured feedback form for experts
 - [ ] Feedback report view (shared component for AI + expert feedback)
-
-### Phase 5: Dashboards & Notifications
 - [ ] Candidate dashboard (session history + trend)
 - [ ] Expert dashboard (bookings + ratings)
+
+### Notifications
 - [ ] Email on booking confirmed
 - [ ] Email/in-app reminder before session
 - [ ] Email/in-app alert when feedback is ready
 
 ## Known issues
-- None — all 11 frontend routes compile cleanly and all 10 backend auth & RBAC verification tests pass.
+- None yet — nothing built.

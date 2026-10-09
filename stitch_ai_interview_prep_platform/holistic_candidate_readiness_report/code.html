@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "primary-container": "#8083ff",
+          "on-primary-container": "#0d0096",
+          "on-surface-variant": "#c7c4d7",
+          "on-secondary-fixed-variant": "#5516be",
+          "outline-variant": "#464554",
+          "error": "#ffb4ab",
+          "inverse-surface": "#e2e1ed",
+          "primary": "#c0c1ff",
+          "on-primary": "#1000a9",
+          "primary-fixed-dim": "#c0c1ff",
+          "on-secondary-fixed": "#23005c",
+          "primary-fixed": "#e1e0ff",
+          "on-primary-fixed": "#07006c",
+          "error-container": "#93000a",
+          "inverse-on-surface": "#2e3039",
+          "on-secondary-container": "#c4abff",
+          "secondary-fixed": "#e9ddff",
+          "inverse-primary": "#494bd6",
+          "on-tertiary-container": "#000703",
+          "secondary-fixed-dim": "#d0bcff",
+          "on-tertiary-fixed-variant": "#005236",
+          "on-surface": "#e2e1ed",
+          "tertiary-fixed-dim": "#4edea3",
+          "on-background": "#e2e1ed",
+          "background": "#11131b",
+          "on-error": "#690005",
+          "outline": "#908fa0",
+          "surface-bright": "#373942",
+          "secondary": "#d0bcff",
+          "surface-tint": "#c0c1ff",
+          "tertiary-container": "#00885d",
+          "surface-variant": "#33343d",
+          "surface-container-low": "#191b24",
+          "surface-container-high": "#282a32",
+          "on-secondary": "#3c0091",
+          "on-tertiary": "#003824",
+          "tertiary-fixed": "#6ffbbe",
+          "on-primary-fixed-variant": "#2f2ebe",
+          "tertiary": "#4edea3",
+          "surface-container-highest": "#33343d",
+          "surface-container-lowest": "#0c0e16",
+          "surface": "#11131b",
+          "on-tertiary-fixed": "#002113",
+          "secondary-container": "#571bc1",
+          "surface-container": "#1d1f28",
+          "on-error-container": "#ffdad6",
+          "surface-dim": "#11131b"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "space-xs": "0.25rem",
+          "margin-mobile": "1.25rem",
+          "gutter": "1.5rem",
+          "space-xl": "2.5rem",
+          "space-md": "1rem",
+          "space-sm": "0.5rem",
+          "gutter-mobile": "1rem",
+          "space-lg": "1.5rem",
+          "margin": "3rem"
+        },
+        "fontFamily": {
+          "headline-xl": ["Plus Jakarta Sans"],
+          "label-sm": ["Inter"],
+          "label-md": ["Inter"],
+          "display-hero": ["Plus Jakarta Sans"],
+          "headline-md": ["Plus Jakarta Sans"],
+          "headline-sm": ["Plus Jakarta Sans"],
+          "body-sm": ["Inter"],
+          "headline-lg": ["Plus Jakarta Sans"],
+          "body-md": ["Inter"],
+          "code-mono": ["JetBrains Mono"],
+          "display-hero-mobile": ["Plus Jakarta Sans"],
+          "body-lg": ["Inter"],
+          "headline-xl-mobile": ["Plus Jakarta Sans"],
+          "body-xl": ["Inter"]
+        },
+        "fontSize": {
+          "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.025em", "fontWeight": "700"}],
+          "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "600"}],
+          "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+          "display-hero": ["56px", {"lineHeight": "64px", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+          "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600"}],
+          "headline-sm": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+          "body-sm": ["12px", {"lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+          "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+          "body-md": ["14px", {"lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400"}],
+          "code-mono": ["13px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+          "display-hero-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+          "body-lg": ["16px", {"lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "400"}],
+          "headline-xl-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+          "body-xl": ["18px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "400"}]
+        }
+      }
+    }
+  }</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_12px_rgba(0,0,0,0.5)]"><div class="h-28 w-full px-margin-mobile lg:px-margin flex flex-col justify-between py-space-xs"><div class="flex items-center justify-between gap-space-md pt-space-xs"><div class="flex items-center gap-space-md shrink-0"><img alt="Interview Prep Platform Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgOSci_jBT9C3hVa_bYVX4F9TEug9bfqOdGhw4tln2Wy6qB4ny30iaoeii5BPYymGTEIs-0IzV17nY-lp-h2nbnwrvDboPCzT9ij85pDNdPPVgjlX8V0c-VyLaiRh3-077gpFlEWCdD0osonunKUSUA2dzOvj-mvv8OudrgfvNhXCPDODD3a2s0jRE0CXDU_0wgZxYFqzI88MtxsGWHlss-TvgDQvMWysyhyRvuYpIScSeUc_bAjFNjQ"/><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-none">ExpertHire</span><span class="font-code-mono text-[10px] text-primary uppercase tracking-widest mt-space-xs">Intelligence &amp; Career Suite</span></div><div class="hidden 2xl:flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-surface-container-high"><span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span><span class="font-label-sm text-label-sm text-tertiary-fixed uppercase tracking-wider">v3.4 Production Ready</span></div></div><div class="flex items-center gap-space-sm shrink-0"><a class="hidden md:inline-flex items-center px-space-md py-space-sm rounded-lg bg-surface-container-high font-label-md text-label-md text-on-surface hover:bg-surface-bright hover:text-on-surface transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]" data-path="ai-mock-interview" href="#"><span class="material-symbols-outlined text-[16px] mr-space-xs text-primary">smart_toy</span>Quick AI Simulation</a><a class="inline-flex items-center px-space-md py-space-sm rounded-lg bg-gradient-to-r from-primary-container to-secondary-container font-label-md text-label-md text-on-surface hover:brightness-110 transition-all shadow-[0_8px_20px_-4px_rgba(99,102,241,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]" data-path="mentor-marketplace" href="#"><span class="material-symbols-outlined text-[16px] mr-space-xs">calendar_month</span>Book Mentor</a><div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center shrink-0 border border-outline-variant"><span class="material-symbols-outlined text-primary text-[18px]">person</span></div></div></div><div class="flex items-center overflow-x-auto pb-space-xs scrollbar-none"><nav class="flex items-center gap-space-xs shrink-0" data-active-classes="bg-surface-container-high text-primary font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] rounded-lg"><a class="px-space-sm py-1 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="resume-review" href="#">Resume Review</a><a class="px-space-sm py-1 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="ai-mock-interview" href="#">AI Mock Interview</a><a class="px-space-sm py-1 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="mentor-marketplace" href="#">Mentor Marketplace</a><a aria-current="page" class="px-space-sm py-1 transition-colors whitespace-nowrap bg-surface-container-high text-primary font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] rounded-lg" data-path="candidate-readiness-report" href="#">Readiness Report</a><a class="px-space-sm py-1 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="jobs-scraper-matcher" href="#">Jobs &amp; Matcher</a><a class="px-space-sm py-1 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="custom-jd-analyzer" href="#">Custom JD Analyzer</a><a class="px-space-sm py-1 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap" data-path="institutional-teams-os" href="#">Institutional Teams OS</a></nav></div></div></header><main class="w-full pt-28 bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Dynamic Atmospheric Glow Overlay -->
+<div class="relative w-full overflow-hidden px-margin-mobile lg:px-margin py-space-lg max-w-7xl mx-auto flex flex-col gap-space-xl">
+<!-- Decorative Gradient Mesh Orbs -->
+<div class="absolute -top-32 -left-32 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute top-1/3 -right-24 w-80 h-80 bg-secondary/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute bottom-10 left-1/3 w-72 h-72 bg-tertiary/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<!-- Candidate Meta Header & Telemetry Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-mono text-label-sm text-primary uppercase tracking-widest">Candidate ID: EXH-8942-STF</span>
+<span class="text-outline text-label-sm">•</span>
+<span class="font-label-sm text-label-sm text-tertiary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-ping"></span> Live Audit Synced
+          </span>
+</div>
+<div class="flex items-center gap-space-md flex-wrap">
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Executive Readiness Audit</h1>
+<span class="px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md shadow-sm">
+            Targeting: <strong class="text-primary font-semibold">Staff Software Engineer (L6)</strong>
+</span>
+</div>
+</div>
+<!-- Action CTA Suite -->
+<div class="flex items-center gap-space-sm self-start md:self-auto shrink-0">
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-high hover:bg-surface-bright text-on-surface font-label-md text-label-md transition-all shadow-sm active:scale-95" id="btn-share">
+<span class="material-symbols-outlined text-[18px] text-secondary">share</span>
+          Share with Recruiter
+        </button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-gradient-to-r from-primary-container to-secondary-container hover:brightness-110 text-on-surface font-label-md text-label-md transition-all shadow-md active:scale-95" id="btn-export">
+<span class="material-symbols-outlined text-[18px]">download_for_offline</span>
+          Export Full Telemetry PDF
+        </button>
+</div>
+</div>
+<!-- Executive Summary Banner (Bento Architecture) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- Primary Core Readiness Index Card -->
+<div class="lg:col-span-7 bg-surface-container rounded-xl p-space-lg flex flex-col justify-between relative overflow-hidden shadow-xl">
+<div class="absolute -right-8 -top-8 w-44 h-44 bg-primary-container/20 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Aggregate Readiness Rating</span>
+<span class="font-code-mono text-label-sm text-tertiary-fixed bg-surface-container-highest px-space-sm py-0.5 rounded-full">Top 2.8% of Pool</span>
+</div>
+<p class="font-headline-md text-headline-md text-on-surface font-bold">Ready for L6 / Staff Level Assessment</p>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+            Candidate displays superior architecture decomposition instincts, stellar STAR executive context framing, and robust asynchronous problem resolution under adversarial stress scenarios.
+          </p>
+</div>
+<div class="pt-space-lg flex flex-col sm:flex-row sm:items-end justify-between gap-space-md">
+<div class="flex items-baseline gap-space-sm">
+<span class="font-display-hero text-display-hero text-primary tracking-tighter">91</span>
+<span class="font-headline-sm text-headline-sm text-outline">/100</span>
+<div class="flex items-center gap-1 px-space-xs py-0.5 rounded bg-surface-container-high text-tertiary text-label-sm font-code-mono ml-space-xs">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+              +27 pts (6wks)
+            </div>
+</div>
+<!-- Mini Progress Dial Matrix -->
+<div class="flex items-center gap-space-md">
+<div class="flex flex-col items-center">
+<div class="relative w-12 h-12 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="95, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-code-mono text-label-sm text-on-surface">95%</span>
+</div>
+<span class="font-label-sm text-[10px] text-outline uppercase tracking-wider mt-1">Arch</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="relative w-12 h-12 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-tertiary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="93, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-code-mono text-label-sm text-on-surface">93%</span>
+</div>
+<span class="font-label-sm text-[10px] text-outline uppercase tracking-wider mt-1">Exec STAR</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="relative w-12 h-12 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-secondary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="89, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-code-mono text-label-sm text-on-surface">89%</span>
+</div>
+<span class="font-label-sm text-[10px] text-outline uppercase tracking-wider mt-1">Rigor</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Verified Data Ingestion Volume Cards -->
+<div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-space-sm">
+<!-- Voice Simulations -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[24px]">graphic_eq</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">12 Completed</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">AI Voice Simulations</span>
+</div>
+</div>
+<div class="text-right font-code-mono text-body-sm text-tertiary">
+            18.4 hrs log
+          </div>
+</div>
+<!-- Live Staff Mentors -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[24px]">supervised_user_circle</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">3 Live Sessions</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Staff Mentors (Meta, Stripe)</span>
+</div>
+</div>
+<div class="text-right font-code-mono text-body-sm text-secondary">
+            100% Endorse
+          </div>
+</div>
+<!-- ATS Resume Analysis -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex items-center justify-center text-tertiary shrink-0">
+<span class="material-symbols-outlined text-[24px]">document_scanner</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">4 ATS Iterations</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Resume Architecture Scans</span>
+</div>
+</div>
+<div class="text-right font-code-mono text-body-sm text-tertiary">
+            96/100 ATS Match
+          </div>
+</div>
+</div>
+</div>
+<!-- Visual Competency Analytics: Radar & Longitudinal Growth -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-stretch">
+<!-- Central Interactive 5-Axis Competency Radar -->
+<div class="lg:col-span-7 bg-surface-container rounded-xl p-space-lg flex flex-col justify-between shadow-lg relative">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex flex-col">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">5-Axis Competency Radar</h2>
+<span class="font-label-sm text-label-sm text-outline">Evaluated via calibrated L6 Rubrics &amp; real-time audio NLP</span>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high text-primary font-code-mono text-label-sm">Interactive Axis</span>
+</div>
+<!-- Radar Canvas (Pure SVG Micro-Graphic) -->
+<div class="relative w-full aspect-square max-w-[420px] mx-auto flex items-center justify-center">
+<svg class="w-full h-full text-surface-container-highest" fill="none" viewbox="0 0 400 400">
+<!-- Concentric Web Guides -->
+<polygon points="200,40 352,150 294,330 106,330 48,150" stroke="currentColor" stroke-dasharray="3 3" stroke-width="1.5"></polygon>
+<polygon points="200,80 314,163 270,298 130,298 86,163" stroke="currentColor" stroke-dasharray="2 2" stroke-width="1.5"></polygon>
+<polygon points="200,120 276,175 247,265 153,265 124,175" stroke="currentColor" stroke-width="1"></polygon>
+<polygon points="200,160 238,188 223,233 177,233 162,188" stroke="currentColor" stroke-width="0.8"></polygon>
+<!-- Axis Rays -->
+<line stroke="currentColor" stroke-width="1.5" x1="200" x2="200" y1="200" y2="40"></line>
+<line stroke="currentColor" stroke-width="1.5" x1="200" x2="352" y1="200" y2="150"></line>
+<line stroke="currentColor" stroke-width="1.5" x1="200" x2="294" y1="200" y2="330"></line>
+<line stroke="currentColor" stroke-width="1.5" x1="200" x2="106" y1="200" y2="330"></line>
+<line stroke="currentColor" stroke-width="1.5" x1="200" x2="48" y1="200" y2="150"></line>
+<!-- Benchmark Fill (Tier 5 Target) -->
+<polygon fill="rgba(148, 163, 184, 0.08)" points="200,88 306,165 266,290 134,290 94,165" stroke="rgba(148, 163, 184, 0.3)" stroke-width="1"></polygon>
+<!-- Candidate Actual Data Polygon (Indigo/Violet Glow) -->
+<!-- Axis 1: Arch 95% -> (200, 48) -->
+<!-- Axis 2: Rigor 89% -> (335, 155) -->
+<!-- Axis 3: Exec STAR 93% -> (287, 321) -->
+<!-- Axis 4: Problem Speed 87% -> (118, 313) -->
+<!-- Axis 5: Clarity 92% -> (60, 154) -->
+<polygon class="transition-all duration-500 hover:fill-opacity-40 cursor-pointer" fill="rgba(128, 131, 255, 0.28)" points="200,48 335,155 287,321 118,313 60,154" stroke="#8083ff" stroke-width="2.5"></polygon>
+<!-- Vertex Knots -->
+<circle cx="200" cy="48" fill="#c0c1ff" r="4.5"></circle>
+<circle cx="335" cy="155" fill="#c0c1ff" r="4.5"></circle>
+<circle cx="287" cy="321" fill="#4edea3" r="4.5"></circle>
+<circle cx="118" cy="313" fill="#d0bcff" r="4.5"></circle>
+<circle cx="60" cy="154" fill="#8083ff" r="4.5"></circle>
+</svg>
+<!-- Label Overlays positioned absolute -->
+<div class="absolute top-1 left-1/2 -translate-x-1/2 text-center group cursor-pointer">
+<span class="font-label-md text-label-md text-on-surface block font-semibold">System Architecture</span>
+<span class="font-code-mono text-label-sm text-primary">95 / 100</span>
+</div>
+<div class="absolute top-1/3 -right-2 text-right group cursor-pointer">
+<span class="font-label-md text-label-md text-on-surface block font-semibold">Algorithmic Rigor</span>
+<span class="font-code-mono text-label-sm text-secondary">89 / 100</span>
+</div>
+<div class="absolute bottom-2 right-4 text-right group cursor-pointer">
+<span class="font-label-md text-label-md text-on-surface block font-semibold">Executive STAR</span>
+<span class="font-code-mono text-label-sm text-tertiary">93 / 100</span>
+</div>
+<div class="absolute bottom-2 left-4 text-left group cursor-pointer">
+<span class="font-label-md text-label-md text-on-surface block font-semibold">Problem Speed</span>
+<span class="font-code-mono text-label-sm text-primary-fixed-dim">87 / 100</span>
+</div>
+<div class="absolute top-1/3 -left-2 text-left group cursor-pointer">
+<span class="font-label-md text-label-md text-on-surface block font-semibold">Communication Clarity</span>
+<span class="font-code-mono text-label-sm text-tertiary-fixed-dim">92 / 100</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-md flex flex-wrap items-center justify-between gap-space-xs text-outline text-label-sm">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-sm bg-primary/40 inline-block"></span> Candidate Actual Profile
+          </div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-0.5 bg-outline inline-block"></span> L6 Staff Industry Baseline (85.0)
+          </div>
+</div>
+</div>
+<!-- Longitudinal Growth Timeline & Weekly Velocity -->
+<div class="lg:col-span-5 bg-surface-container rounded-xl p-space-lg flex flex-col justify-between shadow-lg">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Longitudinal Trajectory</h2>
+<span class="font-code-mono text-label-sm text-tertiary bg-surface-container-high px-2 py-0.5 rounded">Delta +42.1%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Readiness progression recorded across weekly benchmark simulations over 6 weeks.</p>
+</div>
+<!-- Inline Velocity SVG Trendline -->
+<div class="my-space-md bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-sm">
+<div class="flex justify-between items-end">
+<div>
+<span class="font-label-sm text-label-sm uppercase text-outline">Current Index</span>
+<p class="font-headline-md text-headline-md text-tertiary font-bold">91 pts</p>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm uppercase text-outline">Starting Baseline</span>
+<p class="font-headline-md text-headline-md text-outline font-semibold">64 pts</p>
+</div>
+</div>
+<!-- Sparkline Chart -->
+<div class="h-28 w-full flex items-end">
+<svg class="w-full h-full overflow-visible" viewbox="0 0 300 80">
+<defs>
+<lineargradient id="growthGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#4edea3" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#4edea3" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Filled Area -->
+<path d="M 0 65 L 50 56 L 110 44 L 170 36 L 230 22 L 290 8 L 290 80 L 0 80 Z" fill="url(#growthGrad)"></path>
+<!-- Trend Polyline -->
+<path d="M 0 65 L 50 56 L 110 44 L 170 36 L 230 22 L 290 8" fill="none" stroke="#4edea3" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Data Nodes -->
+<circle cx="0" cy="65" fill="#4edea3" r="3.5"></circle>
+<circle cx="50" cy="56" fill="#4edea3" r="3.5"></circle>
+<circle cx="110" cy="44" fill="#4edea3" r="3.5"></circle>
+<circle cx="170" cy="36" fill="#4edea3" r="3.5"></circle>
+<circle cx="230" cy="22" fill="#4edea3" r="3.5"></circle>
+<circle cx="290" cy="8" fill="#ffffff" r="4.5"></circle>
+</svg>
+</div>
+<!-- Milestones Bar -->
+<div class="grid grid-cols-6 text-center font-code-mono text-label-sm text-outline pt-space-xs">
+<span>W1 (64)</span>
+<span>W2 (69)</span>
+<span>W3 (74)</span>
+<span>W4 (78)</span>
+<span>W5 (85)</span>
+<span class="text-tertiary font-bold">W6 (91)</span>
+</div>
+</div>
+<!-- Weekly Highlights Accordion / Narrative -->
+<div class="flex flex-col gap-space-xs">
+<div class="p-space-sm rounded-lg bg-surface-container-high flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">verified</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Breakthrough at Week 4: Concurrency Models</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Shifted from basic thread synchronization to event-driven reactive messaging patterns, raising System Arch from 76 to 95.</p>
+</div>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-high flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[18px] mt-0.5">speed</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Week 5: Code Synthesis Optimization</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Reduced algorithmic implementation time by 38% under live stress testing with zero compiler errors.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Synthesis of AI vs Human Mentor Assessments -->
+<div class="bg-surface-container rounded-xl p-space-lg shadow-xl flex flex-col gap-space-lg">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Multi-Modal Consensus Core</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-semibold">AI Simulation vs. Staff Mentor Convergence</h2>
+</div>
+<div class="px-space-md py-space-xs rounded-full bg-surface-container-highest text-on-surface font-code-mono text-body-sm self-start">
+          98.2% Inter-Evaluator Correlation
+        </div>
+</div>
+<!-- Highlights Consensus Callout -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col md:flex-row items-start md:items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[28px]">handshake</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-label-md text-label-md text-primary font-bold uppercase tracking-wider">Unanimous Evaluation Consensus</span>
+<p class="font-body-lg text-body-lg text-on-surface font-medium">
+            “Exceptional technical domain mastery and pristine fault-tolerant designs; primary growth leverage lies in articulating business-impact trade-offs earlier in dialogue.”
+          </p>
+</div>
+</div>
+<!-- Comparative Column Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- AI Voice & Telemetry Engine Column -->
+<div class="bg-surface-container-high rounded-xl p-space-md flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-variant flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Neural Audio &amp; NLP Model</span>
+</div>
+<span class="font-code-mono text-label-sm text-primary">12 Simulations</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<div class="bg-surface-container rounded-lg p-space-sm">
+<span class="font-label-sm text-label-sm uppercase text-outline block mb-1">Cadence &amp; Filler Word Ratio</span>
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface font-semibold">142 words/min (Ideal Executive Pace)</span>
+<span class="text-tertiary font-code-mono text-body-sm">0.8% fillers</span>
+</div>
+</div>
+<div class="bg-surface-container rounded-lg p-space-sm">
+<span class="font-label-sm text-label-sm uppercase text-outline block mb-1">STAR Structural Compliance</span>
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface font-semibold">Situation/Task: 18% • Action: 54% • Result: 28%</span>
+<span class="text-primary font-code-mono text-body-sm">Optimal</span>
+</div>
+</div>
+<div class="bg-surface-container rounded-lg p-space-sm">
+<span class="font-label-sm text-label-sm uppercase text-outline block mb-1">Synthesizer Key Observation</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Candidate remains calm when interviewer introduces mid-session architectural pivot (e.g. sudden region outage requirements). Minimal panic markers recorded.
+              </p>
+</div>
+</div>
+</div>
+<!-- Human Mentor Verification Column -->
+<div class="bg-surface-container-high rounded-xl p-space-md flex flex-col gap-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-variant flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Staff Interviewer Council</span>
+</div>
+<span class="font-code-mono text-label-sm text-secondary">3 Verified Rounds</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<div class="bg-surface-container rounded-lg p-space-sm">
+<span class="font-label-sm text-label-sm uppercase text-outline block mb-1">Senior Staff Panelist Review (Stripe)</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+                “Candidate clearly owns systems at real hyperscale. Walked through distributed cache invalidation strategies with concrete operational scar-tissue examples.”
+              </p>
+</div>
+<div class="bg-surface-container rounded-lg p-space-sm">
+<span class="font-label-sm text-label-sm uppercase text-outline block mb-1">Principal Engineer Review (Meta L7)</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+                “Strong leadership presence. When challenged on Paxos vs Raft trade-offs, defended decisions logically without defensiveness.”
+              </p>
+</div>
+<div class="bg-surface-container rounded-lg p-space-sm">
+<span class="font-label-sm text-label-sm uppercase text-outline block mb-1">Mentor Consensus Score</span>
+<div class="flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface font-semibold">Strong Hire (Unanimous)</span>
+<span class="text-tertiary font-code-mono text-body-sm">4.8 / 5.0</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Strengths & Vulnerabilities Breakdown with Actionable Recommendations -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-md">
+<!-- Strengths Matrix -->
+<div class="bg-surface-container rounded-xl p-space-lg flex flex-col gap-space-md shadow-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Demonstrated Strengths</h3>
+<span class="font-label-sm text-label-sm text-outline">High-probability hire drivers for L6 committees</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Strength 1 -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-label-md text-on-surface font-bold">Distributed Resiliency Under Partition</span>
+<span class="text-tertiary font-code-mono text-label-sm">Rating: 98%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Instinctively covers split-brain scenarios, CAP theorem realities, and deterministic fallback routines before prompting.
+            </p>
+</div>
+<!-- Strength 2 -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-label-md text-on-surface font-bold">Executive Executive Storytelling (STAR)</span>
+<span class="text-tertiary font-code-mono text-label-sm">Rating: 94%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Communicates organizational leverage, mentorship impact on junior engineers, and tangible business metric outcomes ($4.2M AWS cost reduction).
+            </p>
+</div>
+<!-- Strength 3 -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-label-md text-on-surface font-bold">Clean Code Ergonomics</span>
+<span class="text-tertiary font-code-mono text-label-sm">Rating: 91%</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Produces production-grade syntax with modular helper functions, comprehensive boundary handling, and clear variable nomenclature.
+            </p>
+</div>
+</div>
+</div>
+<!-- Vulnerabilities & Precision Prescriptions -->
+<div class="bg-surface-container rounded-xl p-space-lg flex flex-col gap-space-md shadow-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[24px]">troubleshoot</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Growth Vulnerabilities</h3>
+<span class="font-label-sm text-label-sm text-outline">Actionable levers for maximizing offer level &amp; compensation</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Vulnerability 1 -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-label-md text-on-surface font-bold">Cost-Benefit Business Framing</span>
+<span class="text-error font-code-mono text-label-sm">Priority: High</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Occasionally defaults to over-engineering solutions without first quantifying traffic tier and engineering team headcount overhead.
+            </p>
+<div class="mt-1 p-space-xs bg-surface-container-high rounded text-body-sm text-secondary flex items-start gap-1.5">
+<span class="material-symbols-outlined text-[16px] mt-0.5">tips_and_updates</span>
+<span><strong>Prescription:</strong> Spend the initial 3 minutes explicitly clarifying SLAs, operational budgets, and write vs read ratio constraints.</span>
+</div>
+</div>
+<!-- Vulnerability 2 -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-label-md text-on-surface font-bold">Pacing on Complex Graph DP Algorithms</span>
+<span class="text-secondary font-code-mono text-label-sm">Priority: Medium</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Takes an average of 4.5 minutes to converge on recurrence relations in memoized graph transformations compared to target 2.5 minutes.
+            </p>
+<div class="mt-1 p-space-xs bg-surface-container-high rounded text-body-sm text-secondary flex items-start gap-1.5">
+<span class="material-symbols-outlined text-[16px] mt-0.5">tips_and_updates</span>
+<span><strong>Prescription:</strong> Complete modules 8 &amp; 9 in 'AI Rapid Algorithmic Speed Trainer' to internalize topological sort variants.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Candidate Verification Artifacts & Testimonial Footnote -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md shadow-inner">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-tertiary shrink-0">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Cryptographically Signed Candidate Telemetry</span>
+<span class="font-code-mono text-label-sm text-outline">Hash: 8b1f49a37e192c40c888e23f... • Verified by ExpertHire Automated Evaluator Engine</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<span class="font-label-sm text-label-sm text-outline">Report ID: #RPT-2025-L6</span>
+<button class="px-space-sm py-1 bg-surface-container hover:bg-surface-high rounded text-on-surface text-label-sm font-label-sm flex items-center gap-1" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> Back to Top
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple interactive feedback toast simulation for Share and Export CTAs
+  document.getElementById('btn-export')?.addEventListener('click', function() {
+    const originalText = this.innerHTML;
+    this.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span> Compiling PDF...';
+    setTimeout(() => {
+      this.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span> Telemetry Exported!';
+      setTimeout(() => {
+        this.innerHTML = originalText;
+      }, 2500);
+    }, 1200);
+  });
+
+  document.getElementById('btn-share')?.addEventListener('click', function() {
+    const originalText = this.innerHTML;
+    this.innerHTML = '<span class="material-symbols-outlined text-[18px] text-tertiary">done_all</span> Link Copied!';
+    setTimeout(() => {
+      this.innerHTML = originalText;
+    }, 2000);
+  });
+</script></main><footer class="w-full bg-surface-container-lowest text-on-surface-variant py-space-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]"><div class="w-full px-margin-mobile lg:px-margin max-w-7xl mx-auto flex flex-col gap-space-lg"><div class="flex flex-wrap items-center justify-between gap-space-md pb-space-lg shadow-[0_1px_0_rgba(255,255,255,0.05)]"><div class="flex items-center gap-space-md"><img alt="Interview Prep Platform Logo" class="h-6 w-auto object-contain opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgOSci_jBT9C3hVa_bYVX4F9TEug9bfqOdGhw4tln2Wy6qB4ny30iaoeii5BPYymGTEIs-0IzV17nY-lp-h2nbnwrvDboPCzT9ij85pDNdPPVgjlX8V0c-VyLaiRh3-077gpFlEWCdD0osonunKUSUA2dzOvj-mvv8OudrgfvNhXCPDODD3a2s0jRE0CXDU_0wgZxYFqzI88MtxsGWHlss-TvgDQvMWysyhyRvuYpIScSeUc_bAjFNjQ"/><span class="font-headline-sm text-headline-sm text-on-surface">ExpertHire Platform Matrix</span></div><div class="flex flex-wrap items-center gap-space-sm"><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-high"><span class="material-symbols-outlined text-tertiary text-[14px]">verified_user</span><span class="font-label-sm text-label-sm text-on-surface">SOC2 Type II</span></div><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-high"><span class="material-symbols-outlined text-secondary text-[14px]">hub</span><span class="font-label-sm text-label-sm text-on-surface">ATS Ingestion API</span></div><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-high"><span class="material-symbols-outlined text-primary text-[14px]">videocam</span><span class="font-label-sm text-label-sm text-on-surface">Jitsi WebRTC Mesh</span></div><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-high"><span class="w-2 h-2 rounded-full bg-tertiary"></span><span class="font-label-sm text-label-sm text-on-surface">99.9% Core SLA</span></div></div></div><div class="grid grid-cols-2 md:grid-cols-4 gap-space-lg font-body-sm text-body-sm"><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider mb-space-xs">Candidate Services</span><a class="hover:text-on-surface transition-colors" data-path="resume-review" href="#">ATS Resume Review</a><a class="hover:text-on-surface transition-colors" data-path="ai-mock-interview" href="#">AI Mock Simulation</a><a class="hover:text-on-surface transition-colors" data-path="mentor-marketplace" href="#">Verified Mentors</a></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider mb-space-xs">Intelligence &amp; Jobs</span><a class="hover:text-on-surface transition-colors" data-path="candidate-readiness-report" href="#">Readiness Index &amp; Radar</a><a class="hover:text-on-surface transition-colors" data-path="jobs-scraper-matcher" href="#">Live Job Matching</a><a class="hover:text-on-surface transition-colors" data-path="custom-jd-analyzer" href="#">JD Blueprint Designer</a></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider mb-space-xs">Enterprise &amp; Trust</span><a class="hover:text-on-surface transition-colors" data-path="institutional-teams-os" href="#">Institutional Teams OS</a><a class="hover:text-on-surface transition-colors" href="#">FERPA &amp; GDPR Policies</a><a class="hover:text-on-surface transition-colors" href="#">Security Whitepaper</a></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider mb-space-xs">Platform Status</span><div class="flex items-center gap-space-xs text-tertiary font-code-mono text-code-mono"><span class="w-2 h-2 rounded-full bg-tertiary"></span>All Services Operational</div><span class="text-outline text-[11px]">Global Edge Latency: ~18ms</span></div></div><div class="pt-space-md flex flex-wrap items-center justify-between gap-space-sm font-label-sm text-label-sm text-outline"><p>© 2025 ExpertHire AI &amp; Mentor Matrix Inc. All sovereign computing rights reserved.</p><div class="flex items-center gap-space-md"><a class="hover:text-on-surface transition-colors" href="#">Privacy Architecture</a><a class="hover:text-on-surface transition-colors" href="#">Security Whitepaper</a><a class="hover:text-on-surface transition-colors" href="#">System Telemetry</a></div></div></div></footer></body></html>
