@@ -1,23 +1,22 @@
-from datetime import datetime
-
-from sqlalchemy import Boolean, DateTime, ForeignKey, Index, String
+﻿from datetime import datetime
+from sqlalchemy import Boolean, DateTime, ForeignKey, Index, String, Text, Float
 from sqlalchemy.orm import Mapped, mapped_column
-
 from app.models.base import Base
-
 
 class ExpertProfile(Base):
     __tablename__ = "expert_profiles"
 
     user_id: Mapped[str] = mapped_column(String, unique=True, index=True)
-    display_name: Mapped[str] = mapped_column(String(120))
-    headline: Mapped[str] = mapped_column(String(180))
+    display_name: Mapped[str] = mapped_column(String(120), default="")
+    headline: Mapped[str] = mapped_column(String(180), default="")
     company: Mapped[str | None] = mapped_column(String(120), nullable=True)
-    bio: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    company_title: Mapped[str | None] = mapped_column(String, nullable=True)
+    bio: Mapped[str | None] = mapped_column(Text, nullable=True)
     domains: Mapped[str] = mapped_column(String(500), default="")
     years_experience: Mapped[int] = mapped_column(default=0)
     is_approved: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
-
+    approved: Mapped[bool] = mapped_column(Boolean, default=False)
+    avg_rating: Mapped[float] = mapped_column(Float, default=0.0)
 
 class AvailabilitySlot(Base):
     __tablename__ = "availability_slots"
@@ -27,7 +26,6 @@ class AvailabilitySlot(Base):
     start_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
     end_time: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     is_booked: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
-
 
 class Booking(Base):
     __tablename__ = "bookings"
