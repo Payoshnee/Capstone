@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.core.config import settings
-from app.api import resume, auth, users
+from app.api import resume, auth, users, bookings
 
 app = FastAPI(title="PrepPilot API")
 
@@ -35,6 +35,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 app.include_router(resume.router, prefix="/api/resume", tags=["resume"])
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(users.router, prefix="/api/users", tags=["users"])
+app.include_router(bookings.router, prefix="/api", tags=["booking"])
 
 @app.get("/api/health")
 async def health_check():
