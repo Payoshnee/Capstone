@@ -9,7 +9,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; user?: User; error?: string }>;
   signup: (email: string, password: string, fullName: string, role: UserRole) => Promise<{ success: boolean; error?: string }>;
   loginAsDemo: (role: UserRole) => Promise<void>;
   switchRole: (role: UserRole) => Promise<void>;
@@ -78,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     initAuth();
   }, []);
 
-  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const login = async (email: string, password: string): Promise<{ success: boolean; user?: User; error?: string }> => {
     setIsLoading(true);
     try {
       // 1. If Supabase configured, attempt Supabase Auth first
@@ -102,7 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           localStorage.setItem(TOKEN_KEY, data.session.access_token);
           localStorage.setItem(USER_KEY, JSON.stringify(supaUser));
           setIsLoading(false);
-          return { success: true };
+          return { success: true, user: supaUser };
         }
       }
 
@@ -119,7 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.setItem(TOKEN_KEY, res.data.token);
         localStorage.setItem(USER_KEY, JSON.stringify(res.data.user));
         setIsLoading(false);
-        return { success: true };
+        return { success: true, user: res.data.user };
       }
 
       setIsLoading(false);

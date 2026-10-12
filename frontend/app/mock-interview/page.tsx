@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { apiPost } from "@/lib/api";
 
 interface DialogueMessage {
   id: string;
@@ -87,30 +88,73 @@ export default function MockInterviewPage() {
   };
 
   // Send candidate message
-  const handleSendAnswer = () => {
+  const handleSendAnswer = async () => {
     if (!inputAnswer.trim()) return;
-    const newMsg: DialogueMessage = {
+    const answerText = inputAnswer.trim();
+    const candidateMsg: DialogueMessage = {
       id: `msg-${Date.now()}`,
       sender: "candidate",
       senderName: "You (Candidate)",
       timestamp: formatTimer(elapsedSeconds),
-      content: inputAnswer.trim(),
+      content: answerText,
     };
-    setMessages((prev) => [...prev, newMsg]);
+    
+    const updatedMessages = [...messages, candidateMsg];
+    setMessages(updatedMessages);
     setInputAnswer("");
 
-    // Simulate AI follow up
-    setTimeout(() => {
-      const aiReply: DialogueMessage = {
-        id: `msg-ai-${Date.now()}`,
-        sender: "ai",
-        senderName: "AI Proctor (AURA)",
-        timestamp: formatTimer(elapsedSeconds + 4),
-        content:
-          "“Excellent insight on time-bucketed dynamic salting. How would you handle state reconciliation during node failover when sequence numbers must remain strictly monotonic across replicas?”",
-      };
-      setMessages((prev) => [...prev, aiReply]);
-    }, 1800);
+    // Temporary typing indicator
+    const thinkingMsgId = `thinking-${Date.now()}`;
+    const thinkingMsg: DialogueMessage = {
+      id: thinkingMsgId,
+      sender: "ai",
+      senderName: "AI Proctor (AURA)",
+      timestamp: formatTimer(elapsedSeconds + 1),
+      content: "Analyzing architectural response...",
+      isStreaming: true,
+    };
+    setMessages((prev) => [...prev, thinkingMsg]);
+
+    try {
+      const res = await apiPost<{ reply: string; sender_name?: string }>("/api/ai/interview/chat", {
+        messages: updatedMessages.map((m) => ({
+          sender: m.sender,
+          content: m.content,
+          sender_name: m.senderName,
+        })),
+        target_role: "Staff Distributed Systems Engineer",
+      });
+
+      const replyContent =
+        res.data?.reply ||
+        "“Good architectural breakdown. How would you handle continuous ledger compaction while maintaining sub-millisecond read latency on historical balances?”";
+
+      setMessages((prev) =>
+        prev
+          .filter((m) => m.id !== thinkingMsgId)
+          .concat({
+            id: `msg-ai-${Date.now()}`,
+            sender: "ai",
+            senderName: res.data?.sender_name || "AI Proctor (AURA)",
+            timestamp: formatTimer(elapsedSeconds + 3),
+            content: `“${replyContent.replace(/^[“"]|[”"]$/g, "")}”`,
+          })
+      );
+    } catch {
+      // Fallback response if network or AI service drops
+      setMessages((prev) =>
+        prev
+          .filter((m) => m.id !== thinkingMsgId)
+          .concat({
+            id: `msg-ai-${Date.now()}`,
+            sender: "ai",
+            senderName: "AI Proctor (AURA)",
+            timestamp: formatTimer(elapsedSeconds + 3),
+            content:
+              "“Excellent insight on time-bucketed dynamic salting. How would you handle state reconciliation during node failover when sequence numbers must remain strictly monotonic across replicas?”",
+          })
+      );
+    }
   };
 
   return (

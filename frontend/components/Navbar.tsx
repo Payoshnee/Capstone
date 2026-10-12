@@ -76,6 +76,30 @@ export function Navbar() {
               Resume AI
             </Link>
             <Link
+              href="/mentors"
+              className={`px-3 py-1.5 rounded-lg transition-colors ${
+                pathname.startsWith("/mentors") ? "text-foreground bg-muted" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Book Mentor
+            </Link>
+            <Link
+              href="/mock-interview"
+              className={`px-3 py-1.5 rounded-lg transition-colors ${
+                pathname.startsWith("/mock-interview") ? "text-foreground bg-muted" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              AI Mock
+            </Link>
+            <Link
+              href="/feedback"
+              className={`px-3 py-1.5 rounded-lg transition-colors ${
+                pathname.startsWith("/feedback") ? "text-foreground bg-muted" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Feedback
+            </Link>
+            <Link
               href="/profile"
               className={`px-3 py-1.5 rounded-lg transition-colors ${
                 pathname === "/profile" ? "text-foreground bg-muted" : "text-muted-foreground hover:text-foreground"

@@ -66,12 +66,15 @@ export default function FeedbackPage() {
 
     if (result.error) {
       setError(result.error);
-    } else if (result.data?.data) {
-      setReport(result.data.data);
-    } else if (result.data?.error) {
-      setError(result.data.error.message);
     } else {
-      setError("No feedback report was found for this session.");
+      const reportPayload = (result.data as any)?.data || result.data;
+      if (reportPayload && reportPayload.overall_score !== undefined) {
+        setReport(reportPayload);
+      } else if ((result.data as any)?.error) {
+        setError((result.data as any).error.message || "Failed to load report");
+      } else {
+        setError("No feedback report was found for this session.");
+      }
     }
 
     setLoading(false);

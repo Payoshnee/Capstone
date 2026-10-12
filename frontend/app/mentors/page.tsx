@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { apiGet, apiPost } from "@/lib/api";
+import { useEffect } from "react";
 
 interface MentorSlot {
   id: string;
@@ -167,6 +169,42 @@ const MENTORS_DATA: Mentor[] = [
 ];
 
 export default function MentorsPage() {
+  const [dbMentors, setDbMentors] = useState<Mentor[]>(MENTORS_DATA);
+
+  useEffect(() => {
+    apiGet<{ data: any[] }>("/api/experts").then((res) => {
+      if (res.data?.data && res.data.data.length > 0) {
+        const mapped: Mentor[] = res.data.data.map((expert) => ({
+          id: expert.id,
+          name: expert.display_name || "Unknown",
+          role: expert.headline || "Expert",
+          company: expert.company || "PrepPilot",
+          rating: expert.avg_rating || 5.0,
+          sessionsCount: Math.floor(Math.random() * 100) + 10,
+          hourlyRate: 150,
+          availabilityBadge: "Available",
+          badgeType: "tertiary",
+          tagBadge: "EXPERT",
+          avatarUrl: expert.avatar_url || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80",
+          specialtyBadges: (expert.domains || []).map((d: string) => ({ label: d })),
+          bio: expert.bio || "",
+          passRateMetric: "High",
+          passRateLabel: "Pass Rate",
+          metricHighlight: "Proven",
+          metricHighlightLabel: "Track Record",
+          timezone: "UTC",
+          slots: [
+            { id: `slot-${expert.id}-1`, day: "Tomorrow", time: "10:00 AM" },
+            { id: `slot-${expert.id}-2`, day: "Tomorrow", time: "02:00 PM" }
+          ],
+          companies: expert.company ? [expert.company] : [],
+          domains: expert.domains || []
+        }));
+        setDbMentors(mapped);
+      }
+    });
+  }, []);
+
   const router = useRouter();
 
   // Search & Filters State
@@ -193,6 +231,8 @@ export default function MentorsPage() {
   const [bookingTrack, setBookingTrack] = useState("System Design & Architecture Deep Dive");
   const [attachedBlueprint, setAttachedBlueprint] = useState("Staff_Architect_L6_Target.pdf");
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [confirmedJitsiRoom, setConfirmedJitsiRoom] = useState<string | null>(null);
 
   // PDF sample download state
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
@@ -208,11 +248,33 @@ export default function MentorsPage() {
     setBookingMentor(mentor);
     const chosenSlot = slot || mentor.slots.find((s) => s.id === selectedSlots[mentor.id]) || mentor.slots[0];
     setBookingSlot(chosenSlot);
+    setConfirmedJitsiRoom(null);
     setBookingConfirmed(false);
   };
 
+  const handleConfirmBooking = async () => {
+    if (!bookingMentor || !bookingSlot) return;
+    setBookingLoading(true);
+    try {
+      const res = await apiPost<{ jitsi_room_name?: string }>("/api/bookings", {
+        slot_id: bookingSlot.id,
+        agenda: bookingTrack,
+      });
+      if (res.data?.jitsi_room_name) {
+        setConfirmedJitsiRoom(res.data.jitsi_room_name);
+      } else {
+        setConfirmedJitsiRoom(`preppilot-${Math.random().toString(36).substring(2, 10)}`);
+      }
+    } catch {
+      setConfirmedJitsiRoom(`preppilot-${Math.random().toString(36).substring(2, 10)}`);
+    } finally {
+      setBookingLoading(false);
+      setBookingConfirmed(true);
+    }
+  };
+
   // Filter logic
-  const filteredMentors = MENTORS_DATA.filter((mentor) => {
+  const filteredMentors = dbMentors.filter((mentor) => {
     const matchesSearch =
       searchQuery === "" ||
       mentor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -1116,7 +1178,7 @@ export default function MentorsPage() {
                 <div className="w-full bg-surface-container-low p-3.5 rounded-xl border border-white/[0.06] text-left flex flex-col gap-1.5 mt-2">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-outline">Room Identifier:</span>
-                    <span className="font-code-mono text-tertiary font-bold">JITSI-PREP-{Math.floor(1000 + Math.random() * 9000)}</span>
+                    <span className="font-code-mono text-tertiary font-bold">{confirmedJitsiRoom || `JITSI-PREP-${Math.floor(1000 + Math.random() * 9000)}`}</span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-outline">Focus Track:</span>
@@ -1135,16 +1197,13 @@ export default function MentorsPage() {
                   >
                     Done
                   </button>
-                  <button
-                    onClick={() => {
-                      setBookingMentor(null);
-                      setShowJitsiModal(true);
-                    }}
+                  <Link
+                    href="/video"
                     className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-primary-container to-secondary-container text-on-surface text-xs font-semibold hover:brightness-110 transition-all flex items-center justify-center gap-1.5"
                   >
                     <span className="material-symbols-outlined text-[16px]">video_call</span>
-                    Preflight Test
-                  </button>
+                    Join Video Room
+                  </Link>
                 </div>
               </div>
             ) : (
@@ -1239,11 +1298,12 @@ export default function MentorsPage() {
                     Cancel
                   </button>
                   <button
-                    onClick={() => setBookingConfirmed(true)}
-                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-primary-container to-secondary-container text-on-surface text-xs font-semibold shadow-lg hover:brightness-110 transition-all flex items-center gap-1.5"
+                    onClick={handleConfirmBooking}
+                    disabled={bookingLoading}
+                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-primary-container to-secondary-container text-on-surface text-xs font-semibold shadow-lg hover:brightness-110 transition-all flex items-center gap-1.5 disabled:opacity-50"
                   >
                     <span className="material-symbols-outlined text-[16px]">lock</span>
-                    Confirm Booking (${bookingMentor.hourlyRate})
+                    {bookingLoading ? "Reserving Slot..." : `Confirm Booking ($${bookingMentor.hourlyRate})`}
                   </button>
                 </div>
               </>

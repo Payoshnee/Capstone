@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Rocket, User, GraduationCap, AlertCircle } from "lucide-react";
-import { cn } from "cn";
+import { cn } from "@/lib/utils";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -76,7 +76,7 @@ export default function SignupPage() {
                   onClick={() => setRole("candidate")}
                 >
                   <User className={cn("h-6 w-6", role === "candidate" ? "text-primary" : "text-muted-foreground")} />
-                  <span className="text-sm font-medium">I&apos;m a Candidate</span>
+                  <span className="text-sm font-medium">Student</span>
                 </div>
                 <div 
                   className={cn(
@@ -86,7 +86,7 @@ export default function SignupPage() {
                   onClick={() => setRole("expert")}
                 >
                   <GraduationCap className={cn("h-6 w-6", role === "expert" ? "text-primary" : "text-muted-foreground")} />
-                  <span className="text-sm font-medium">I&apos;m an Expert</span>
+                  <span className="text-sm font-medium">Mentor</span>
                 </div>
               </div>
 

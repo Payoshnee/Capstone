@@ -64,18 +64,16 @@ export default function HomePage() {
               Try AI Interview
             </Link>
             <Link
-              href="/mentors"
-              className="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-primary-container to-secondary-container text-sm font-semibold text-white hover:brightness-110 transition-all shadow-[0_8px_20px_-4px_rgba(99,102,241,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
+              href="/login"
+              className="hidden sm:inline-flex items-center px-4 py-2 rounded-lg bg-surface-container-high text-sm font-medium text-on-surface hover:bg-surface-bright transition-all border border-white/[0.08]"
             >
-              <span className="material-symbols-outlined text-[18px] mr-1.5">calendar_month</span>
-              Book Mentor Session
+              Log In
             </Link>
             <Link
-              href="/profile"
-              className="w-9 h-9 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center hover:border-primary transition-colors"
-              title="Candidate Profile"
+              href="/signup"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-primary-container to-secondary-container text-sm font-semibold text-white hover:brightness-110 transition-all shadow-[0_8px_20px_-4px_rgba(99,102,241,0.45),inset_0_1px_0_rgba(255,255,255,0.25)]"
             >
-              <span className="material-symbols-outlined text-primary text-[20px]">person</span>
+              Sign Up Free
             </Link>
           </div>
         </div>
@@ -141,11 +139,11 @@ export default function HomePage() {
           {/* Hero CTAs */}
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             <Link
-              href="/jd-analyzer"
+              href="/signup"
               className="px-8 py-4 rounded-xl bg-gradient-to-r from-primary-container to-secondary-container text-base font-semibold text-white hover:brightness-110 transition-all shadow-[0_12px_28px_-4px_rgba(128,131,255,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] flex items-center gap-2"
             >
-              <span className="material-symbols-outlined text-[20px]">document_scanner</span>
-              Analyze a Job Description &amp; Start
+              <span className="material-symbols-outlined text-[20px]">rocket_launch</span>
+              Get Started Free
             </Link>
             <a
               href="#microservices"

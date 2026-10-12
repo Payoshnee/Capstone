@@ -12,41 +12,30 @@ type Expert = { id: string; display_name: string; headline: string; company?: st
 type Slot = { id: string; expert_id: string; start_time: string; end_time: string; is_booked: boolean };
 type ApiEnvelope<T> = { data: T | null; error: { message: string } | null };
 
-const demoExperts: Expert[] = [
-  { id: "demo-ananya", display_name: "Ananya Sharma", headline: "Senior Software Engineer", company: "Atlassian", bio: "DSA, frontend systems, and practical interview feedback.", domains: ["DSA", "Frontend"], years_experience: 6 },
-  { id: "demo-rohan", display_name: "Rohan Mehta", headline: "Engineering Manager", company: "Razorpay", bio: "System design and behavioural preparation for product engineering roles.", domains: ["System Design", "Behavioural"], years_experience: 9 },
-  { id: "demo-meera", display_name: "Meera Iyer", headline: "Data Scientist", company: "Microsoft", bio: "Data science case studies, ML fundamentals, and analytics roles.", domains: ["Data Science", "ML"], years_experience: 7 },
-];
-
-function demoSlots(expertId: string): Slot[] {
-  const start = new Date(); start.setDate(start.getDate() + 1); start.setHours(18, 0, 0, 0);
-  return [0, 1, 2].map((offset) => {
-    const slotStart = new Date(start); slotStart.setDate(start.getDate() + offset);
-    const slotEnd = new Date(slotStart.getTime() + 45 * 60 * 1000);
-    return { id: `demo-${expertId}-${offset}`, expert_id: expertId, start_time: slotStart.toISOString(), end_time: slotEnd.toISOString(), is_booked: false };
-  });
-}
-
 export default function BookingPage() {
-  const [experts, setExperts] = useState<Expert[]>(demoExperts);
+  const [experts, setExperts] = useState<Expert[]>([]);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Expert | null>(null);
   const [slots, setSlots] = useState<Slot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     apiGet<ApiEnvelope<Expert[]>>("/api/experts").then((response) => {
-      if (response.data?.data?.length) setExperts(response.data.data);
+      if (response.data?.data) {
+        setExperts(response.data.data);
+      }
+      setLoading(false);
     });
   }, []);
 
-  const filtered = useMemo(() => experts.filter((expert) => [expert.display_name, expert.headline, ...expert.domains].join(" ").toLowerCase().includes(query.toLowerCase())), [experts, query]);
+  const filtered = useMemo(() => experts.filter((expert) => [expert.display_name, expert.headline, ...(expert.domains || [])].join(" ").toLowerCase().includes(query.toLowerCase())), [experts, query]);
   const chooseExpert = async (expert: Expert) => {
     setSelected(expert); setSelectedSlot(null); setMessage(null); setLoadingSlots(true);
     const response = await apiGet<ApiEnvelope<Slot[]>>(`/api/experts/${expert.id}/slots`);
-    setSlots(response.data?.data?.length ? response.data.data : demoSlots(expert.id));
+    setSlots(response.data?.data || []);
     setLoadingSlots(false);
   };
   const confirmBooking = async () => {

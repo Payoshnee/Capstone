@@ -1,20 +1,21 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
-import { UserRole } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Rocket, Shield, GraduationCap, User as UserIcon, AlertCircle } from "lucide-react";
+import { Rocket, AlertCircle, GraduationCap, User as UserIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login, loginAsDemo } = useAuth();
+  const { login } = useAuth();
 
+  const [role, setRole] = useState<"candidate" | "expert">("candidate");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -29,23 +30,13 @@ export default function LoginPage() {
     setLoading(false);
 
     if (result.success) {
-      router.push("/resume");
+      if (result.user?.role === "expert" || role === "expert") {
+        router.push("/expert");
+      } else {
+        router.push("/resume");
+      }
     } else {
       setError(result.error || "Failed to log in. Please check your credentials.");
-    }
-  };
-
-  const handleDemoLogin = async (role: UserRole) => {
-    setLoading(true);
-    setError(null);
-    await loginAsDemo(role);
-    setLoading(false);
-    if (role === "admin") {
-      router.push("/admin");
-    } else if (role === "expert") {
-      router.push("/expert");
-    } else {
-      router.push("/resume");
     }
   };
 
@@ -57,7 +48,7 @@ export default function LoginPage() {
             <Rocket className="h-6 w-6 text-primary" />
           </div>
           <h1 className="text-2xl font-bold">Welcome back to PrepPilot</h1>
-          <p className="text-sm text-muted-foreground">Sign in to access your mock interview dashboard</p>
+          <p className="text-sm text-muted-foreground">Sign in to access your dashboard</p>
         </div>
 
         <Card className="border-border/80 shadow-lg">
@@ -67,6 +58,33 @@ export default function LoginPage() {
               <CardDescription>Enter your email and password below</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div
+                  onClick={() => setRole("candidate")}
+                  className={cn(
+                    "flex flex-col items-center justify-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors",
+                    role === "candidate"
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border hover:bg-muted text-muted-foreground"
+                  )}
+                >
+                  <UserIcon className="w-5 h-5" />
+                  <span className="text-sm font-medium">Student</span>
+                </div>
+                <div
+                  onClick={() => setRole("expert")}
+                  className={cn(
+                    "flex flex-col items-center justify-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors",
+                    role === "expert"
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border hover:bg-muted text-muted-foreground"
+                  )}
+                >
+                  <GraduationCap className="w-5 h-5" />
+                  <span className="text-sm font-medium">Mentor</span>
+                </div>
+              </div>
+
               {error && (
                 <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
@@ -107,55 +125,10 @@ export default function LoginPage() {
 
           <CardFooter className="flex flex-col gap-4 border-t pt-4">
             <div className="text-sm text-center text-muted-foreground w-full">
-              Don&apos;t have an account?{" "}
+              Don't have an account?{" "}
               <Link href="/signup" className="text-primary font-medium hover:underline">
                 Sign up
               </Link>
-            </div>
-
-            <div className="relative w-full my-1">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or One-Click Demo Mode</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 w-full">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => handleDemoLogin("candidate")}
-                disabled={loading}
-                className="text-xs flex flex-col h-auto py-2 gap-1 border-emerald-500/20 hover:border-emerald-500 hover:bg-emerald-500/5"
-              >
-                <UserIcon className="w-4 h-4 text-emerald-400" />
-                <span>Candidate</span>
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => handleDemoLogin("expert")}
-                disabled={loading}
-                className="text-xs flex flex-col h-auto py-2 gap-1 border-indigo-500/20 hover:border-indigo-500 hover:bg-indigo-500/5"
-              >
-                <GraduationCap className="w-4 h-4 text-indigo-400" />
-                <span>Expert</span>
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => handleDemoLogin("admin")}
-                disabled={loading}
-                className="text-xs flex flex-col h-auto py-2 gap-1 border-rose-500/20 hover:border-rose-500 hover:bg-rose-500/5"
-              >
-                <Shield className="w-4 h-4 text-rose-400" />
-                <span>Admin</span>
-              </Button>
             </div>
           </CardFooter>
         </Card>
@@ -163,4 +136,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
@@ -41,7 +41,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={\ \ \ font-sans min-h-screen flex flex-col bg-background text-on-surface}
+        className={`${plusJakartaSans.variable} ${inter.variable} ${jetbrainsMono.variable} font-sans min-h-screen flex flex-col bg-background text-on-surface`}
       >
         <AuthProvider>
           <Navbar />
