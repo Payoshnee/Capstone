@@ -1,14 +1,13 @@
-from datetime import datetime, timezone
+﻿from datetime import datetime, timezone
 from uuid import uuid4
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 from app.modules.video.models import VideoSession
 
 
 class VideoService:
-
-    _sessions: dict[str, VideoSession] = {}
 
     @staticmethod
     async def create_session(
@@ -27,8 +26,9 @@ class VideoService:
             created_at=datetime.now(timezone.utc)
         )
 
-        VideoService._sessions[session_id] = session
-
+        db.add(session)
+        await db.commit()
+        await db.refresh(session)
         return session
 
     @staticmethod
@@ -36,22 +36,22 @@ class VideoService:
         db: AsyncSession,
         session_id: str
     ) -> VideoSession | None:
-
-        return VideoService._sessions.get(session_id)
+        result = await db.execute(select(VideoSession).where(VideoSession.id == session_id))
+        return result.scalar_one_or_none()
 
     @staticmethod
     async def join_session(
         db: AsyncSession,
         session_id: str
     ) -> VideoSession | None:
-
-        session = VideoService._sessions.get(session_id)
-
+        session = await VideoService.get_session(db, session_id)
         if not session:
             return None
 
         if session.status == "waiting":
             session.status = "active"
+            await db.commit()
+            await db.refresh(session)
 
         return session
 
@@ -60,16 +60,15 @@ class VideoService:
         db: AsyncSession,
         session_id: str
     ) -> VideoSession | None:
-
-        session = VideoService._sessions.get(session_id)
-
+        session = await VideoService.get_session(db, session_id)
         if not session:
             return None
 
         session.status = "ended"
         session.ended_at = datetime.now(timezone.utc)
+        await db.commit()
+        await db.refresh(session)
 
         return session
-
 
 video_service = VideoService()

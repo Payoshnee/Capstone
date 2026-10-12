@@ -11,7 +11,7 @@ from app.services.resume_review.service import (
     rank_applicants
 )
 from app.services.resume_review.parser import parse_complete_resume, extract_text_and_layout
-from app.services.resume_review.models import ResumeReport, CandidateApplicant
+from app.models.resume import ResumeReport, CandidateApplicant
 from app.services.resume_review.schemas import (
     ResumeAnalysisReport,
     ResumeScoreCategory,

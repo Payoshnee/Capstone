@@ -1,72 +1,71 @@
 # Progress — PrepPilot
 
-> Keep this a living checklist, not a diary. Check items off as they're genuinely done (built + working, not
-> just started). Add new items if scope shifts.
+> Living checklist of completed vs open engineering items for PrepPilot.
 
 ## What works
-- **Frontend Scaffolding & Design System**: Next.js 16 + TypeScript + Tailwind CSS v4 + Obsidian Gloss Enterprise design tokens (`#11131b` dark surfaces, electric indigo `#c0c1ff`/`#8083ff`, violet, emerald `#4edea3`, Plus Jakarta Sans, Inter, JetBrains Mono, Google Material Symbols). Production build verified with 0 errors.
-- **Master Platform Ecosystem Landing Page** (`/`): High-converting hero with atmospheric glows, interactive split hero demo (target JD blueprint vs live session switcher between 24/7 AI Interviewer with live audio waveform & rubric scores, and Mentor Room), 7-microservice expansive showcase cards (Resume ATS, AI Mock, Mentor Marketplace, Readiness Radar, Jobs Scraper, Custom JD Designer, Institutional Teams OS), 4-step evidence loop, testimonials, transparent pricing, and enterprise footer.
-- **Auth Flow** (`/login`, `/signup`): Authentication pages with candidate/expert role selection and guest/demo flow.
-- **Candidate Profile** (`/profile`): Personal info, target role, experience level, target companies, key skill chips, recent reports sidebar, interview cards.
-- **Resume Review & ATS Diagnostic Suite** (`/resume`, `/resume/report`): Complete Obsidian Gloss Enterprise conversion of `resume_review_ats_diagnostic_suite`. 4-card Bento Matrix (ATS Compatibility radial score with Greenhouse/Lever/Ashby/Workday badges, Quantified Impact, Brevity & Density, Hard Skill Match), parsed resume heatmaps with inline before/after line-through diffs and skill cloud, 4-pillar diagnostic engine (Quantified Impact XYZ formula, word length histogram SVG, verb velocity bars, keyword taxonomy table with quick inject), live state synchronization between diff acceptance and preview pane, Re-scan with Target JD dropzone modal, and PDF export.
-- **24/7 AI Adaptive Mock Interviewer** (`/mock-interview`): Complete Obsidian Gloss Enterprise conversion of `24_7_ai_adaptive_mock_interviewer`. Live proctor session bar with running timer, dual-core stream grid (Neural AI Proctor with animated equalizer visualizer bars + challenge injection indicator, Candidate camera/mic stream controls), live transcript stream with real-time speech telemetry (WPM, filler word count, audio input buffer indicator), System Architecture Whiteboard modal with ASCII diagram editor and broadcast action, live 3-pillar evaluation telemetry (System Depth, Structural Clarity, STAR Execution), 6-axis SVG competency radar chart, and Finish Round evaluation summary modal.
-- **Human Mentor Marketplace & WebRTC Prep** (`/mentors`): Complete Obsidian Gloss Enterprise conversion of `human_mentor_marketplace_webrtc_prep`. Upcoming Jitsi session banner (Marcus Vance, Google Cloud Infra L7, pre-flight hardware diagnostics, attached blueprint selector), 3 evaluation assurance pillars (60-Min SLA, Calibration Matrix, Private Replay), fast multi-tag filtering (FAANG+ companies, Distributed Systems / AI / Leadership domains), sort dropdown, 4 calibrated mentor cards with dynamic slot selection, interactive Jitsi WebRTC pre-flight connection modal, dynamic booking & schedule confirmation modal, and recent calibrated rubric showcase (#EXP-89021-CALIBRATED) with simulated PDF export.
-- **Backend Core**: FastAPI layered architecture (`api/`, `services/`, `models/`, `schemas/`, `core/`), standard `{ data, error }` response schema, CORS middleware, health check endpoint.
-- **Resume Analysis & ATS Scoring Engine**: Complete deterministic and AI-enhanced ATS software. PDF text and layout extraction, structured parsing (contact details, work experience, education with GPA, categorized skills), SDE and Data role keyword pools (9 roles + 29 languages + tools/DBs/cloud), direct JD and role keyword matching, section completeness, action verb and quantifiable metric evaluation, composite ATS scoring (0-100), candidate database logging (`CandidateApplicant`), and multi-applicant ranking (`POST /api/resume/rank`). Verified with automated test suites.
-- **Documentation & Memory Bank**: PrepPilot branding across all documentation, `/memory-bank` persistent context created, `ROADMAP.md` re-sequenced, `implementation_plan.md` created, repository sanitized (stale duplicate context files eliminated), and master root `README.md` created with comprehensive 7-microservice architecture and quickstart instructions.
 
-## What's left (mirrors the MVP scope in `projectbrief.md`)
+### Core Infrastructure & Database
+- [x] Connect Postgres database via Alembic migration (`postgresql+asyncpg://` Supabase pool)
+- [x] Auto-generate and apply schema migrations for Auth, Booking, Video, Feedback, Resume/ATS
+- [x] Database seeding script (`seed_db.py`, `seed_fb.py`) populating live expert profiles, slots, and feedback
 
-### Phase 1: Polish & Integration
-- [x] Landing page (hero, features, how-it-works, FAQ)
-- [x] Login & Signup pages
-- [x] Candidate profile page
-- [x] Resume upload page with drag-and-drop
-- [x] Backend: Resume PDF extraction
-- [x] Backend: Complete ATS text parsing & structure evaluation
-- [x] Backend: SDE & Data roles keyword pool and matching
-- [x] Backend: Candidate database logging & applicant ranking
-- [x] Backend: AI resume analysis (Gemini/Groq/mock)
-- [x] Resume diagnostic report page
-- [x] Backend & frontend scaffolding
+### Auth & Security
+- [x] Native password hashing using `passlib[bcrypt]` with `bcrypt<4.0.0` locked compatibility
+- [x] JWT token generation and verification (`create_access_token`, `verify_token`, `get_current_user`)
+- [x] Role-based routing: Candidate vs Expert vs Admin access guards
+- [x] Frontend Login and Signup forms with Candidate / Expert role selection
+- [x] Shared Navbar with authenticated user badges, role switcher, and logout
 
-- [ ] Connect Supabase Auth live project credentials
-- [ ] Connect Postgres database via Alembic migration
+### AI & Intelligence Engine
+- [x] Multi-tier AI Service: OpenRouter (free models: `llama-3.3-70b:free`, etc.) -> Gemini 1.5 Flash -> Groq -> Fallback
+- [x] AI interview follow-up engine: `POST /api/ai/interview/chat`
+- [x] Live chat integration in `/mock-interview`: evaluates answers and generates deep-dive follow-up questions
+- [x] Resume ATS 4-pillar evaluation and scoring engine (Impact, Technical Depth, ATS Compatibility, Structure)
 
-### Auth & users
-- [ ] Supabase Auth wired into Next.js (signup/login/logout)
-- [ ] Role selection (candidate/expert) on signup
-- [ ] Admin approval flow for expert applications
+### Expert Booking & Video
+- [x] Dynamic expert discovery via database (`GET /api/experts`)
+- [x] Slot creation and retrieval (`GET /api/experts/{id}/slots`)
+- [x] Database booking creation (`POST /api/bookings`) with row-level concurrency lock (`with_for_update`)
+- [x] Jitsi Meet WebRTC room creation and join interface in `/video`
+- [x] Mentor booking modal in `/mentors` wired directly to backend API and database
 
-### Expert discovery
-- [ ] Expert profile creation form
-- [ ] Expert browse/filter page (by domain)
+### Performance & Feedback
+- [x] Structured feedback storage and retrieval (`/api/feedback/{session_id}`)
+- [x] Normalized feedback calculation supporting 1-5 and 0-100 scales with strengths and improvements
+- [x] Seeded demo session `demo-session-002` viewable on `/feedback`
 
-### Booking & availability
-- [ ] Expert availability calendar (set weekly slots)
-- [ ] Candidate booking flow (pick slot, confirm)
-- [ ] Booking confirmation email
+### Pages & Routing (0 Broken Links / 0 404s)
+- [x] `/` (Landing Page with Login / Signup header and active CTAs)
+- [x] `/login` & `/signup`
+- [x] `/resume` & `/resume/report`
+- [x] `/mock-interview`
+- [x] `/mentors` & `/booking`
+- [x] `/feedback`
+- [x] `/video`
+- [x] `/profile`
+- [x] `/expert`
+- [x] `/admin`
+- [x] `/jd-analyzer`
+- [x] `/report`
+- [x] `/jobs`
+- [x] `/teams`
 
-### Video sessions
-- [ ] Jitsi room creation per booking
-- [ ] Join-call UI for both candidate and expert
+---
 
-### AI interviewer
-- [ ] Domain/role selection UI for "Practice now"
-- [ ] Resume upload + Gemini-based parsing
-- [ ] Adaptive question/follow-up loop
-- [ ] AI-generated feedback report
+## Remaining Work (Team Delegation Plan)
 
-### Feedback & dashboards
-- [ ] Structured feedback form for experts
-- [ ] Feedback report view (shared component for AI + expert feedback)
-- [ ] Candidate dashboard (session history + trend)
-- [ ] Expert dashboard (bookings + ratings)
+### Teammate 1: AI Mock Interview Polish & Rubric Export
+- [ ] Save full interview conversation transcripts to the database.
+- [ ] Implement an automated "End Interview & Generate Rubric" action in `/mock-interview` that posts to `/api/feedback`.
 
-### Notifications
-- [ ] Email on booking confirmed
-- [ ] Email/in-app reminder before session
-- [ ] Email/in-app alert when feedback is ready
+### Teammate 2: Video Interview Experience (Jitsi)
+- [ ] Connect the meeting room link from the booking confirmation directly to the `/video` page route with room query param.
+- [ ] Add a side-by-side collaborative code/notes pane next to the Jitsi meeting iframe.
 
-## Known issues
-- None yet — nothing built.
+### Teammate 3: Candidate Dashboard & Past Sessions
+- [ ] In `/profile`, display the candidate's active bookings (`GET /api/bookings`).
+- [ ] Add a list of past interview feedback reports with direct links to view them.
+
+### Teammate 4: Expert Dashboard & Slot Manager
+- [ ] In `/expert`, allow experts to add/remove availability slots (`POST /api/experts/{id}/slots`).
+- [ ] Display an expert's upcoming bookings.

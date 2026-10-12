@@ -21,7 +21,7 @@ from app.services.resume_review.matcher import match_resume_against_jd
 from app.services.resume_review.keyword_pool import ROLE_PROFILES, PROGRAMMING_LANGUAGES, FRAMEWORKS_AND_LIBRARIES, DATABASES_AND_STORAGE, CLOUD_AND_DEVOPS, CORE_CONCEPTS
 from app.core.database import get_db
 from app.services.ai_service import ai_service
-from app.services.resume_review.models import ResumeReport
+from app.models.resume import ResumeReport
 
 router = APIRouter()
 

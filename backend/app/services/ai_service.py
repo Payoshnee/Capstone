@@ -1,18 +1,110 @@
 import json
+import re
+import httpx
 import google.generativeai as genai
 from groq import Groq
 from app.core.config import settings
 
+def _extract_json(text: str) -> dict:
+    """Robustly extract and parse JSON from LLM output."""
+    clean = text.strip()
+    if clean.startswith("```json"):
+        clean = clean[7:]
+    elif clean.startswith("```"):
+        clean = clean[3:]
+    if clean.endswith("```"):
+        clean = clean[:-3]
+    clean = clean.strip()
+    try:
+        return json.loads(clean)
+    except json.JSONDecodeError:
+        # Search for first { and last }
+        start = clean.find("{")
+        end = clean.rfind("}")
+        if start != -1 and end != -1 and end > start:
+            return json.loads(clean[start:end+1])
+        raise
+
 class AIService:
     def __init__(self):
+        self.openrouter_configured = bool(settings.OPENROUTER_API_KEY)
         self.gemini_configured = bool(settings.GEMINI_API_KEY)
-        if self.gemini_configured:
-            genai.configure(api_key=settings.GEMINI_API_KEY)
-            self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')
-        
         self.groq_configured = bool(settings.GROQ_API_KEY)
+
+        if self.gemini_configured:
+            try:
+                genai.configure(api_key=settings.GEMINI_API_KEY)
+                self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+            except Exception as e:
+                print(f"[AIService] Failed to configure Gemini: {e}")
+                self.gemini_configured = False
+
         if self.groq_configured:
-            self.groq_client = Groq(api_key=settings.GROQ_API_KEY)
+            try:
+                self.groq_client = Groq(api_key=settings.GROQ_API_KEY)
+            except Exception as e:
+                print(f"[AIService] Failed to configure Groq: {e}")
+                self.groq_configured = False
+
+    def _call_openrouter(self, messages: list[dict], temperature: float = 0.2) -> str:
+        """Call OpenRouter API using free tier models."""
+        headers = {
+            "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
+            "HTTP-Referer": "http://localhost:3000",
+            "X-Title": "PrepPilot",
+            "Content-Type": "application/json",
+        }
+        payload = {
+            "model": settings.OPENROUTER_MODEL or "meta-llama/llama-3.3-70b-instruct:free",
+            "messages": messages,
+            "temperature": temperature,
+        }
+        with httpx.Client(timeout=60.0) as client:
+            resp = client.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+            return data["choices"][0]["message"]["content"]
+
+    def _call_llm_text(self, prompt: str, system_prompt: str = "") -> str:
+        """Try OpenRouter -> Gemini -> Groq to generate raw text."""
+        # 1. OpenRouter
+        if self.openrouter_configured:
+            try:
+                messages = []
+                if system_prompt:
+                    messages.append({"role": "system", "content": system_prompt})
+                messages.append({"role": "user", "content": prompt})
+                return self._call_openrouter(messages)
+            except Exception as e:
+                print(f"[AIService] OpenRouter call failed: {e}")
+
+        # 2. Gemini
+        if self.gemini_configured:
+            try:
+                full_prompt = f"{system_prompt}\n\n{prompt}" if system_prompt else prompt
+                response = self.gemini_model.generate_content(full_prompt)
+                if response and response.text:
+                    return response.text
+            except Exception as e:
+                print(f"[AIService] Gemini call failed: {e}")
+
+        # 3. Groq
+        if self.groq_configured:
+            try:
+                messages = []
+                if system_prompt:
+                    messages.append({"role": "system", "content": system_prompt})
+                messages.append({"role": "user", "content": prompt})
+                completion = self.groq_client.chat.completions.create(
+                    model="llama3-8b-8192",
+                    messages=messages,
+                    temperature=0.3,
+                )
+                return completion.choices[0].message.content
+            except Exception as e:
+                print(f"[AIService] Groq call failed: {e}")
+
+        return ""
 
     def get_prompt(self, text: str, target_role: str | None) -> str:
         role_context = f" targeting the role of {target_role}" if target_role else ""
@@ -47,22 +139,26 @@ class AIService:
     def analyze_resume(self, text: str, target_role: str | None) -> dict:
         prompt = self.get_prompt(text, target_role)
         
+        # 1. OpenRouter
+        if self.openrouter_configured:
+            try:
+                raw = self._call_openrouter([
+                    {"role": "system", "content": "You are a professional ATS resume analyzer. Output only valid JSON."},
+                    {"role": "user", "content": prompt}
+                ])
+                return _extract_json(raw)
+            except Exception as e:
+                print(f"[AIService] OpenRouter resume analysis failed: {e}")
+
+        # 2. Gemini
         if self.gemini_configured:
             try:
                 response = self.gemini_model.generate_content(prompt)
-                try:
-                    # Strip markdown json blocks if present
-                    text_resp = response.text
-                    if text_resp.startswith("```json"):
-                        text_resp = text_resp[7:-3]
-                    elif text_resp.startswith("```"):
-                        text_resp = text_resp[3:-3]
-                    return json.loads(text_resp)
-                except json.JSONDecodeError:
-                    pass # Fallback to groq
-            except Exception:
-                pass # Fallback to groq
+                return _extract_json(response.text)
+            except Exception as e:
+                print(f"[AIService] Gemini resume analysis failed: {e}")
                 
+        # 3. Groq
         if self.groq_configured:
             try:
                 completion = self.groq_client.chat.completions.create(
@@ -72,10 +168,65 @@ class AIService:
                     response_format={"type": "json_object"}
                 )
                 return json.loads(completion.choices[0].message.content)
-            except Exception:
-                pass # Fallback to mock
+            except Exception as e:
+                print(f"[AIService] Groq resume analysis failed: {e}")
 
         return self.get_mock_fallback(target_role)
+
+    def generate_interview_reply(
+        self,
+        messages: list[dict],
+        target_role: str = "Software Engineer",
+        job_description: str | None = None
+    ) -> str:
+        """Generate conversational AI interviewer response/follow-up question."""
+        system_prompt = f"""You are AURA, an elite AI Technical Bar Raiser interviewer at PrepPilot.
+Target role: {target_role}.
+{"Job Description context: " + job_description if job_description else ""}
+
+Guidelines:
+- Maintain an encouraging, realistic senior interviewer persona.
+- Evaluate the candidate's last answer succinctly in 1-2 sentences.
+- Ask ONE targeted, deep-dive follow-up question that tests technical depth, trade-offs, or system edge cases.
+- Keep total response under 100 words. Speak directly to the candidate.
+"""
+        # Try OpenRouter
+        if self.openrouter_configured:
+            try:
+                formatted = [{"role": "system", "content": system_prompt}] + messages[-6:]
+                return self._call_openrouter(formatted, temperature=0.7)
+            except Exception as e:
+                print(f"[AIService] OpenRouter interview reply failed: {e}")
+
+        # Try Gemini
+        if self.gemini_configured:
+            try:
+                conversation_text = "\n".join([f"{m.get('sender', m.get('role', 'user'))}: {m.get('content', '')}" for m in messages[-6:]])
+                prompt = f"{system_prompt}\n\nRecent Interview Dialogue:\n{conversation_text}\n\nNext interviewer follow-up:"
+                resp = self.gemini_model.generate_content(prompt)
+                if resp and resp.text:
+                    return resp.text.strip()
+            except Exception as e:
+                print(f"[AIService] Gemini interview reply failed: {e}")
+
+        # Try Groq
+        if self.groq_configured:
+            try:
+                formatted = [{"role": "system", "content": system_prompt}] + [
+                    {"role": "assistant" if m.get("sender") == "ai" or m.get("role") == "assistant" else "user", "content": m.get("content", "")}
+                    for m in messages[-6:]
+                ]
+                completion = self.groq_client.chat.completions.create(
+                    model="llama3-8b-8192",
+                    messages=formatted,
+                    temperature=0.6,
+                )
+                return completion.choices[0].message.content.strip()
+            except Exception as e:
+                print(f"[AIService] Groq interview reply failed: {e}")
+
+        # Intelligent fallback response
+        return "Strong technical rationale. In a distributed multi-region setup, how would you prevent split-brain scenarios and maintain consistency during network partitions?"
 
     def get_mock_fallback(self, target_role: str | None) -> dict:
         return {

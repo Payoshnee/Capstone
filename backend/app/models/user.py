@@ -7,6 +7,7 @@ class User(Base):
     __tablename__ = "users"
     email: Mapped[str] = mapped_column(String, unique=True, index=True)
     full_name: Mapped[str | None] = mapped_column(String, nullable=True)
+    hashed_password: Mapped[str | None] = mapped_column(String, nullable=True)
     role: Mapped[str] = mapped_column(String, default="candidate", index=True)  # candidate, mentor, team_admin, super_admin
 
 class Profile(Base):

@@ -7,6 +7,9 @@ from app.schemas.booking import BookingCreate, BookingResponse, ExpertSummary, S
 from app.schemas.common import APIResponse
 from app.services.booking_service import booking_service
 
+from app.core.security import get_optional_current_user
+from app.schemas.user import UserResponse
+
 router = APIRouter()
 
 
@@ -42,19 +45,30 @@ async def create_slot(expert_id: str, payload: SlotCreate, db: AsyncSession = De
 
 
 @router.post("/bookings", response_model=APIResponse[BookingResponse], status_code=201)
-async def create_booking(payload: BookingCreate, candidate_id: str = Query(default="mock-candidate-123"), db: AsyncSession = Depends(get_db)):
+async def create_booking(
+    payload: BookingCreate,
+    candidate_id: str = Query(default="mock-candidate-123"),
+    current_user: UserResponse | None = Depends(get_optional_current_user),
+    db: AsyncSession = Depends(get_db)
+):
     if db is None:
         raise HTTPException(status_code=503, detail="Booking storage is not configured.")
+    effective_candidate_id = current_user.id if current_user else candidate_id
     try:
-        booking = await booking_service.book_slot(db, candidate_id, payload.slot_id, payload.agenda)
+        booking = await booking_service.book_slot(db, effective_candidate_id, payload.slot_id, payload.agenda)
     except ValueError as error:
         raise HTTPException(status_code=409, detail=str(error)) from error
     return APIResponse(data=BookingResponse.model_validate(booking, from_attributes=True))
 
 
 @router.get("/bookings", response_model=APIResponse[list[BookingResponse]])
-async def list_bookings(candidate_id: str = Query(default="mock-candidate-123"), db: AsyncSession = Depends(get_db)):
+async def list_bookings(
+    candidate_id: str = Query(default="mock-candidate-123"),
+    current_user: UserResponse | None = Depends(get_optional_current_user),
+    db: AsyncSession = Depends(get_db)
+):
     if db is None:
         return APIResponse(data=[])
-    bookings = await booking_service.list_candidate_bookings(db, candidate_id)
+    effective_candidate_id = current_user.id if current_user else candidate_id
+    bookings = await booking_service.list_candidate_bookings(db, effective_candidate_id)
     return APIResponse(data=[BookingResponse.model_validate(item, from_attributes=True) for item in bookings])

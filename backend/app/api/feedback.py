@@ -57,49 +57,50 @@ async def get_feedback(
                 error=APIError(message="Feedback not found for this session")
             )
 
-        overall_score = round(
-            (
-                feedback.communication_score
-                + feedback.technical_score
-                + feedback.problem_solving_score
-            ) / 3,
-            2,
-        )
+        # Support both 1-5 and 0-100 score scales seamlessly
+        def norm(s: int | float) -> float:
+            return round(s / 20.0, 1) if s > 5 else float(s)
+
+        comm_5 = norm(feedback.communication_score)
+        tech_5 = norm(feedback.technical_score)
+        ps_5 = norm(feedback.problem_solving_score)
+
+        overall_score = round((comm_5 + tech_5 + ps_5) / 3, 1)
 
         strengths = []
         areas_for_improvement = []
 
-        if feedback.communication_score >= 4:
+        if comm_5 >= 4.0:
             strengths.append("Clear and effective communication.")
-        elif feedback.communication_score <= 2:
+        elif comm_5 <= 2.5:
             areas_for_improvement.append(
                 "Improve clarity and confidence while communicating."
             )
 
-        if feedback.technical_score >= 4:
+        if tech_5 >= 4.0:
             strengths.append("Strong technical understanding.")
-        elif feedback.technical_score <= 2:
+        elif tech_5 <= 2.5:
             areas_for_improvement.append(
                 "Strengthen technical concepts and accuracy."
             )
 
-        if feedback.problem_solving_score >= 4:
+        if ps_5 >= 4.0:
             strengths.append(
                 "Good logical and problem-solving approach."
             )
-        elif feedback.problem_solving_score <= 2:
+        elif ps_5 <= 2.5:
             areas_for_improvement.append(
                 "Practice breaking problems into clear, logical steps."
             )
 
         if not strengths:
             strengths.append(
-                "Shows potential across the evaluated areas."
+                "Shows solid baseline competency across evaluated categories."
             )
 
         if not areas_for_improvement:
             areas_for_improvement.append(
-                "Continue practicing to maintain consistent interview performance."
+                "Continue practicing to maintain consistent interview performance under pressure."
             )
 
         recommendation = (
@@ -111,9 +112,9 @@ async def get_feedback(
             data=FeedbackReport(
                 id=feedback.id,
                 session_id=feedback.session_id,
-                communication_score=feedback.communication_score,
-                technical_score=feedback.technical_score,
-                problem_solving_score=feedback.problem_solving_score,
+                communication_score=round(comm_5),
+                technical_score=round(tech_5),
+                problem_solving_score=round(ps_5),
                 comments=feedback.comments,
                 authored_by=feedback.authored_by,
                 overall_score=overall_score,

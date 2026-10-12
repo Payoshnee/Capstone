@@ -16,7 +16,7 @@ from app.services.resume_review.keyword_pool import (
 from app.services.resume_review.parser import parse_complete_resume
 from app.services.resume_review.matcher import perform_keyword_matching, match_resume_against_jd
 from app.services.resume_review.evaluator import evaluate_formatting_and_layout
-from app.services.resume_review.models import ResumeReport, CandidateApplicant
+from app.models.resume import ResumeReport, CandidateApplicant
 from app.services.resume_review.schemas import (
     ResumeAnalysisReport,
     ResumeScoreCategory,

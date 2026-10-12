@@ -1,10 +1,10 @@
-﻿from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.core.config import settings
-from app.api import resume, auth, users, bookings, feedback
+from app.api import resume, auth, users, bookings, feedback, ai
 from app.modules.video.router import router as video_router
 
 app = FastAPI(title="PrepPilot API")
@@ -37,6 +37,7 @@ app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(bookings.router, prefix="/api", tags=["booking"])
 app.include_router(video_router, prefix="/api", tags=["video"])
 app.include_router(feedback.router, prefix="/api/feedback", tags=["feedback"])
+app.include_router(ai.router, prefix="/api/ai", tags=["ai"])
 
 @app.get("/api/health")
 async def health_check():

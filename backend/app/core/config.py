@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     SUPABASE_JWT_SECRET: str = ""
     GEMINI_API_KEY: str = ""
     GROQ_API_KEY: str = ""
+    OPENROUTER_API_KEY: str = ""
+    OPENROUTER_MODEL: str = "meta-llama/llama-3.3-70b-instruct:free"
     CORS_ORIGINS: str = "http://localhost:3000"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")

@@ -55,14 +55,14 @@ async def signup(user_in: UserCreate, db: AsyncSession = Depends(get_db)):
 @router.post("/login", response_model=APIResponse[AuthResponse])
 async def login(login_in: LoginRequest, db: AsyncSession = Depends(get_db)):
     try:
+        from app.core.hashing import verify_password
         user = await user_service.get_by_email(db, login_in.email)
-        if not user:
-            # For development ease, if user is not found, automatically register as candidate
-            user = await user_service.create_user(db, UserCreate(
-                email=login_in.email,
-                full_name=login_in.email.split("@")[0].capitalize(),
-                role=UserRole.CANDIDATE.value
-            ))
+        
+        if not user or not user.hashed_password:
+            return APIResponse(error=APIError(message="Invalid email or password."))
+
+        if not verify_password(login_in.password, user.hashed_password):
+            return APIResponse(error=APIError(message="Invalid email or password."))
 
         token = create_access_token({
             "sub": user.id,

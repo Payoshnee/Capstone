@@ -69,13 +69,17 @@ class UserService:
 
     @staticmethod
     async def create_user(db: AsyncSession | None, user_in: UserCreate) -> User:
+        from app.core.hashing import get_password_hash
         role = user_in.role or "candidate"
         new_id = str(uuid.uuid4())
+        hashed_pwd = get_password_hash(user_in.password) if user_in.password else None
+        
         user = User(
             id=new_id,
             email=user_in.email,
             full_name=user_in.full_name,
-            role=role
+            role=role,
+            hashed_password=hashed_pwd
         )
         if not db:
             MOCK_USERS_DB[new_id] = {
